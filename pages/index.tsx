@@ -1,12 +1,18 @@
 import { NextPage } from "next";
 import Head from "next/head"
-import { FunctionComponent } from "react";
 import favicon from '../assets/images/favicon-32x32.png';
 
+import { GetServerSideProps } from "next";
+
+import Thread from "../components/Thread";
 import dataJSON from '../data.json';
 
-const Home:NextPage<{data:any}> = ({data}) =>{
-  
+import { Data } from "../TypesAndInterfaces";
+
+
+
+const Home:NextPage<{data:Data}> = ({data}) =>{
+
   
   return (
     <>
@@ -16,11 +22,15 @@ const Home:NextPage<{data:any}> = ({data}) =>{
         <link rel="icon" type="image/png" sizes="32x32" href={favicon.src}/>
         <title>Frontend Mentor | Interactive comments section</title>
       </Head>
-      {
-        data.comments.map((comment:object) => (
-          console.log(comment)
-        ))
-      }
+      <main>
+        {
+          data.comments.map((thread) => (
+            <Thread 
+              key={thread.content}
+              data={thread}/>
+          ))
+        }
+      </main>
     </>
   )
 }
@@ -28,7 +38,9 @@ const Home:NextPage<{data:any}> = ({data}) =>{
 export default Home;
 
 
-export async function getServerSideProps() {
+
+
+export const getServerSideProps:GetServerSideProps<{data: Data}> = async () => {
   return {
     props: {
       data: dataJSON
