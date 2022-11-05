@@ -1,0 +1,57 @@
+.Comment {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1rem;
+
+    color: #67727E;
+
+    margin-bottom: 1rem;
+}
+
+
+.meta {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+
+    gap: 1rem;
+}
+
+.authorName {
+    color: #334253;
+    font-weight: 500;
+    line-height: 1.185;
+}
+
+.content {
+    margin-bottom: 1rem;
+}
+
+.footer {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.score {
+    background-color: #F5F6FA;
+    border-radius: 10px;
+    width: 100px;
+    height: 40px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    overflow: hidden;
+
+    button {
+        width: 33.3%;
+        height: 100%;
+
+        background-color: inherit;
+        border: none;
+    }
+}
+

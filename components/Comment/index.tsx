@@ -20,8 +20,8 @@ const Comment:CommentComponent = ({avatarURL, authorName, createdAt, content, sc
                     <Image 
                         src={avatarURL.slice(1)}
                         alt={authorName + "'s avatar"}
-                        width="100"
-                        height="100"
+                        width="32"
+                        height="32"
                     />
                 </div>
                 <span className={styles.authorName}>{authorName}</span>
