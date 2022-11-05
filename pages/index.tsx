@@ -5,9 +5,11 @@ import favicon from '../assets/images/favicon-32x32.png';
 import { GetServerSideProps } from "next";
 
 import Thread from "../components/Thread";
+import AddComment from "../components/AddComment";
+
 import dataJSON from '../data.json';
 
-import { DataType } from "../TypesAndInterfaces";
+import { DataType, ThreadType } from "../TypesAndInterfaces";
 
 import styles from '../styles/Home.module.scss';
 import { useContext, useEffect } from "react";
@@ -33,14 +35,9 @@ const Home:NextPage<{dataProps:DataType}> = ({dataProps}) =>{
       </Head>
       <main className={styles.main}>
         {
-          data === null
-            ? "Loading ..."
-            :data.comments.map((thread) => (
-              <Thread 
-                key={thread.content}
-                data={thread}/>
-            ))
+          data === null? "Loading ...": threadsGenerator(data.comments)
         }
+        <AddComment />
       </main>
     </>
   )
@@ -58,3 +55,12 @@ export const getServerSideProps:GetServerSideProps<{dataProps: DataType}> = asyn
     }
   }
 }
+
+
+/*****************************************/
+
+const threadsGenerator = (threads:ThreadType[]) => threads.map((thread) => (
+  <Thread 
+    key={thread.content}
+    data={thread}/>
+))
