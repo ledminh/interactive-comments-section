@@ -10,11 +10,19 @@ import dataJSON from '../data.json';
 import { DataType } from "../TypesAndInterfaces";
 
 import styles from '../styles/Home.module.scss';
+import { useContext, useEffect } from "react";
+import { DataContext } from "../useDataContext";
 
 
-const Home:NextPage<{data:DataType}> = ({data}) =>{
+const Home:NextPage<{dataProps:DataType}> = ({dataProps}) =>{
 
+  const {data, setData} = useContext(DataContext);
   
+  useEffect(() => {
+    setData(dataProps);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataProps]);
+
   return (
     <>
       <Head>
@@ -25,11 +33,13 @@ const Home:NextPage<{data:DataType}> = ({data}) =>{
       </Head>
       <main className={styles.main}>
         {
-          data.comments.map((thread) => (
-            <Thread 
-              key={thread.content}
-              data={thread}/>
-          ))
+          data === null
+            ? "Loading ..."
+            :data.comments.map((thread) => (
+              <Thread 
+                key={thread.content}
+                data={thread}/>
+            ))
         }
       </main>
     </>
@@ -41,10 +51,10 @@ export default Home;
 
 
 
-export const getServerSideProps:GetServerSideProps<{data: DataType}> = async () => {
+export const getServerSideProps:GetServerSideProps<{dataProps: DataType}> = async () => {
   return {
     props: {
-      data: dataJSON
+      dataProps: dataJSON
     }
   }
 }
