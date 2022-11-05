@@ -14,7 +14,7 @@ type CommentType = {
     user: UserInfo,
 };
 
-interface ReplyType extends CommentType {
+export interface ReplyType extends CommentType {
     replyingTo: string
 }
 

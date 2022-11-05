@@ -1,5 +1,6 @@
 import { FunctionComponent } from "react";
 import { ThreadType } from "../../TypesAndInterfaces";
+import Comment from "../Comment";
 
 import styles from './Thread.module.scss';
 
@@ -7,30 +8,38 @@ const Thread:FunctionComponent<{data:ThreadType}> = ({data}) => {
 
     return (
         <div className={styles.Thread}>
+            <div className={styles.mainComment}>
+                <Comment 
+                    avatarURL={data.user.image.png}
+                    authorName={data.user.username}
+                    createdAt={data.createdAt}
+                    content={data.content}
+                    score={data.score}
+                />
+            </div>
             {
-                Object.keys(data).map(k => (
-                    <div key={k}>
-                        {
-                                k === 'replies'?
-                                <div>
-                                    {
-                                        data[k].map(rep => (
-                                            <div key={rep.content}
-                                                className={styles.Reply}
-                                            >
-                                                {rep.content}
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                                : k === 'user'? null:
-                                <div><b>{k}: </b><span>{data[k as keyof ThreadType] as string}</span></div>
-                        }
-                    </div>
-                ))
+                data.replies.length !== 0 ?
+                <div className={styles.replies}>
+                    {
+                        data.replies.map(Rep => (
+                            <Comment 
+                                key={Rep.content}
+                                avatarURL={Rep.user.image.png}
+                                authorName={Rep.user.username}
+                                createdAt={Rep.createdAt}
+                                content={Rep.content}
+                                score={Rep.score}
+                                replyingTo={Rep.replyingTo}
+                            />
+                        ))
+                    }
+                </div>
+                :null
             }
+
         </div>
     );
 }
+
 
 export default Thread;

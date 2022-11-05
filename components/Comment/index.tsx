@@ -3,24 +3,36 @@ import { FunctionComponent } from "react";
 import styles from './Comment.module.scss';
 import Image from "next/image";
 
+
 import iconPlus from '../../assets/images/icon-plus.svg';
 import iconMinus from '../../assets/images/icon-minus.svg';
+import iconReply from '../../assets/images/icon-reply.svg';
 
-const Comment:FunctionComponent = () => {
+
+type CommentElement = FunctionComponent<{ avatarURL: string,authorName: string, createdAt: string, content: string, score: number, replyingTo?: string }>;
+
+
+const Comment:CommentElement = ({avatarURL, authorName, createdAt, content, score, replyingTo}) => {
 
 
     return (
         <div className={styles.Comment}>
             <div className={styles.meta}>
-                <Image 
-                    src="./images/avatars/image-amyrobson.png"
-                    alt="amyrobson's avatar"
-                />
-                <span>amyrobson</span>
-                <span>1 month ago</span>
+                <div className={styles.avatar}>
+                    <Image 
+                        src={avatarURL.slice(1)}
+                        alt={authorName + "'s avatar"}
+                        width="100"
+                        height="100"
+                    />
+                </div>
+                <span className={styles.authorName}>{authorName}</span>
+                <span className={styles.createdAt}>{createdAt}</span>
             </div>
             <div className={styles.content}>
-                Impressive! Though it seem blah blah blah blah blah blahblah blah blahblah blah blahblah blah blah
+                {
+                    content
+                }
             </div>
             <div className={styles.footer}>
                 <div className={styles.score}>
@@ -30,7 +42,7 @@ const Comment:FunctionComponent = () => {
                             alt="add score"
                         />
                     </button>
-                    <span>12</span>
+                    <span>{score}</span>
                     <button>
                         <Image
                             src={iconMinus}
@@ -38,8 +50,16 @@ const Comment:FunctionComponent = () => {
                         />
                     </button>
                 </div>
-                <div className={styles.function}>
-                    <div>Reply</div>
+                <div className={styles.functions}>
+                    <div className={styles.reply}>
+                        <div className={styles.replyIcon}>
+                            <Image 
+                                src={iconReply}
+                                alt="Reply icon"
+                            />
+                        </div>
+                        <span>Reply</span>
+                    </div>
                 </div>
             </div>
         </div>
