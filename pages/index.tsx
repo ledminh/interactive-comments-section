@@ -7,11 +7,11 @@ import { GetServerSideProps } from "next";
 import Thread from "../components/Thread";
 import dataJSON from '../data.json';
 
-import { Data } from "../TypesAndInterfaces";
+import { DataType } from "../TypesAndInterfaces";
 
 
 
-const Home:NextPage<{data:Data}> = ({data}) =>{
+const Home:NextPage<{data:DataType}> = ({data}) =>{
 
   
   return (
@@ -40,7 +40,7 @@ export default Home;
 
 
 
-export const getServerSideProps:GetServerSideProps<{data: Data}> = async () => {
+export const getServerSideProps:GetServerSideProps<{data: DataType}> = async () => {
   return {
     props: {
       data: dataJSON

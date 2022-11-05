@@ -1,27 +1,29 @@
 type UserInfo = {
-    image: { 
+    'image': { 
         png: string,
         webp: string
     },
-    username: string
+    'username': string
 };
 
-export type Comment = {
+type CommentType = {
     id: number,
     content: string,
     createdAt: string,
     score: number,
     user: UserInfo,
-    replies: {
-        id: number,
-        content: string,
-        createdAt: string,
-        score: number,
-        replyingTo: string,
-        user: UserInfo
-    }[]
 };
 
-export type Data = {
-    comments: Comment[]
+interface ReplyType extends CommentType {
+    replyingTo: string
+}
+
+export interface ThreadType extends CommentType {
+    replies: ReplyType[]
+}
+
+
+
+export type DataType = {
+    comments: ThreadType[]
 }
