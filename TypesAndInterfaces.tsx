@@ -35,4 +35,5 @@ export type CommentComponent = FunctionComponent<{ avatarURL: string,authorName:
 export type DataContextType = {
     data: DataType | null,
     setData: Dispatch<SetStateAction<DataType | null >>
+
 }
