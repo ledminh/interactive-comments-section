@@ -9,6 +9,7 @@ import dataJSON from '../data.json';
 
 import { DataType } from "../TypesAndInterfaces";
 
+import styles from '../styles/Home.module.scss';
 
 
 const Home:NextPage<{data:DataType}> = ({data}) =>{
@@ -22,7 +23,7 @@ const Home:NextPage<{data:DataType}> = ({data}) =>{
         <link rel="icon" type="image/png" sizes="32x32" href={favicon.src}/>
         <title>Frontend Mentor | Interactive comments section</title>
       </Head>
-      <main>
+      <main className={styles.main}>
         {
           data.comments.map((thread) => (
             <Thread 
