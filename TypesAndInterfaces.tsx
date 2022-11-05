@@ -1,5 +1,9 @@
-import { FunctionComponent, Dispatch, SetStateAction } from "react";
+import { FunctionComponent, Dispatch, SetStateAction, Reducer } from "react";
 
+
+/**************************
+ * Data 
+ */
 type UserInfo = {
     'image': { 
         png: string,
@@ -30,10 +34,34 @@ export type DataType = {
     comments: ThreadType[]
 }
 
-export type CommentComponent = FunctionComponent<{ avatarURL: string,authorName: string, createdAt: string, content: string, score: number, replyingTo?: string }>;
+/******************
+ * DataContext
+ */
 
 export type DataContextType = {
     data: DataType | null,
     setData: Dispatch<SetStateAction<DataType | null >>
 
 }
+
+
+/***********************************
+ * Function/Component interfaces
+ */
+export type CommentComponent = FunctionComponent<{ avatarURL: string,authorName: string, createdAt: string, content: string, score: number, replyingTo?: string }>;
+
+
+
+/********************
+ *  useReducer
+ */
+ 
+export type StateType = {isLoaded: false} 
+| {
+    isLoaded: true,
+    data: DataType
+}
+
+export type ActionType = {type:'set-data', payload: DataType};
+
+export type ReducerType = Reducer<StateType, ActionType>;
