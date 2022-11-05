@@ -1,3 +1,5 @@
+import { FunctionComponent } from "react";
+
 type UserInfo = {
     'image': { 
         png: string,
@@ -26,4 +28,10 @@ export interface ThreadType extends CommentType {
 
 export type DataType = {
     comments: ThreadType[]
+}
+
+export type CommentComponent = FunctionComponent<{ avatarURL: string,authorName: string, createdAt: string, content: string, score: number, replyingTo?: string }>;
+
+export type DataContextType = {
+    
 }

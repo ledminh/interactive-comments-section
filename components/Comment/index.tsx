@@ -1,4 +1,3 @@
-import { FunctionComponent } from "react";
 
 import styles from './Comment.module.scss';
 import Image from "next/image";
@@ -8,11 +7,10 @@ import iconPlus from '../../assets/images/icon-plus.svg';
 import iconMinus from '../../assets/images/icon-minus.svg';
 import iconReply from '../../assets/images/icon-reply.svg';
 
+import { CommentComponent } from "../../TypesAndInterfaces";
 
-type CommentElement = FunctionComponent<{ avatarURL: string,authorName: string, createdAt: string, content: string, score: number, replyingTo?: string }>;
 
-
-const Comment:CommentElement = ({avatarURL, authorName, createdAt, content, score, replyingTo}) => {
+const Comment:CommentComponent = ({avatarURL, authorName, createdAt, content, score, replyingTo}) => {
 
 
     return (
