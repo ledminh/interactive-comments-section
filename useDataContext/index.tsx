@@ -3,12 +3,8 @@ import { createContext, useReducer} from "react";
 import { DataContextType, StateType, ActionType, DataType, ReducerType } from "../TypesAndInterfaces";
 
 
-const defaultDataContext:DataContextType = {
-    data: null,
-    setData: () => {}
-}
 
-export const DataContext = createContext<DataContextType>(defaultDataContext);
+export const DataContext = createContext<DataContextType|null>(null);
 
 
 // const initialState = {count: 0};

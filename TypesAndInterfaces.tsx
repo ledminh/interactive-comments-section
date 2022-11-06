@@ -40,7 +40,7 @@ export type DataType = {
 
 export type DataContextType = {
     data: DataType | null,
-    setData: Dispatch<SetStateAction<DataType | null >>
+    setData: (data:DataType) => void| null
 
 }
 
