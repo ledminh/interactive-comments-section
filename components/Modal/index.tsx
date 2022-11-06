@@ -1,24 +1,13 @@
-import { FunctionComponent, useContext } from "react";
-// import { UIContext } from "../../useUI";
+import { FunctionComponent } from "react";
+import DeleteModal from "./DeleteModal";
 
-// import GameOverModal from "./GameOverModal";
-// import RestartModal from "./RestartModal";
 
 const Modals:FunctionComponent = () => {
-    //UI Context
-    // const {showGameOverModal, setShowGameOverModal, showRestartModal, setShowRestartModal} = useContext(UIContext);
 
 
     return (
         <>
-            {/* <GameOverModal
-                showModal={showGameOverModal}
-                setShowModal={setShowGameOverModal}
-                />
-            <RestartModal
-                showModal={showRestartModal}
-                setShowModal={setShowRestartModal}
-                /> */}
+            <DeleteModal/>
             <div className="modal-root"></div>
         </>
     );

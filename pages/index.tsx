@@ -9,7 +9,7 @@ import AddComment from "../components/AddComment";
 
 import dataJSON from '../data.json';
 
-import { DataType, ThreadType } from "../TypesAndInterfaces";
+import { DataContextType, DataType, ThreadType } from "../TypesAndInterfaces";
 
 import styles from '../styles/Home.module.scss';
 import { useContext, useEffect } from "react";
@@ -19,7 +19,7 @@ import Modals from "../components/Modal";
 
 const Home:NextPage<{dataProps:DataType}> = ({dataProps}) =>{
 
-  const {data, setData} = useContext(DataContext);
+  const {data, setData} = useContext(DataContext) as DataContextType;
   
   useEffect(() => {
     setData(dataProps);
