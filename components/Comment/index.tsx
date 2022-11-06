@@ -42,12 +42,7 @@ const Comment:CommentComponent = ({avatarURL, authorName, createdAt, content, sc
                     <Button type="MINUS"/>
                 </div>
                 <div className={styles.functions}>
-                    <div className={styles.reply}>
-                        <div className={styles.replyIcon}>
-                            <IconReply/>
-                        </div>
-                        <span>Reply</span>
-                    </div>
+                    <Reply />
                 </div>
             </div>
         </div>
@@ -63,9 +58,6 @@ export default Comment;
 const Button:FunctionComponent<{type:"PLUS"|"MINUS"}> = ({type, ...props}) => {
     const [hover, setHover] = useState(false);
 
-    useEffect(() => {
-        console.log(hover);
-    }, [hover]);
 
     return (
         <button
@@ -83,5 +75,22 @@ const Button:FunctionComponent<{type:"PLUS"|"MINUS"}> = ({type, ...props}) => {
                     /> 
             }
         </button>
+    )
+}
+
+const Reply:FunctionComponent = (props) => {
+    const [hover, setHover] = useState(false);
+
+    return (
+        <div className={styles.reply}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+            {...props}
+        >
+            <IconReply
+                fill={hover? '#C5C6EF': '#5357B6'}
+            />
+            <span>Reply</span>
+        </div>
     )
 }

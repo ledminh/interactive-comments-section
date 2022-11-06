@@ -1,0 +1,50 @@
+.AddComment {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.textArea {
+    width: 100%;
+    border: 1px solid #E9EBF0;
+    border-radius: 8px;
+    min-height: 6rem;
+    margin-bottom: 1rem;
+    resize: none;
+
+    padding: 0.75rem 1.5rem;
+
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5rem;
+}
+
+.footer {
+    display: flex;
+    flex-flow: row nowrap;
+
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+        width: 104px;
+        height: 48px;
+
+        background-color: #5357B6;
+        border-radius: 8px;
+        color: white;
+
+        border: none;
+
+        font-weight: 600;
+
+        &:hover {
+            background-color: #C5C6EF;
+        }
+
+        &:active {
+            transition: transform .3s;
+            transform: scale(.95);
+        }
+    }
+}

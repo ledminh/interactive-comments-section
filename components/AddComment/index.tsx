@@ -11,16 +11,15 @@ const AddComment:FunctionComponent = () => {
         <div className={styles.AddComment}>
             <textarea 
                 className={styles.textArea}
+                placeholder="Add a comment ..."
             />
             <div className={styles.footer}>
-                <div className={styles.avatar}>
-                    <Image 
-                        src="/images/avatars/image-amyrobson.png"
-                        alt="avatar"
-                        width="32"
-                        height="32"
-                    />
-                </div>
+                <Image 
+                    src="/images/avatars/image-amyrobson.png"
+                    alt="avatar"
+                    width="32"
+                    height="32"
+                />
                 <button>SEND</button>
             </div>
         </div>

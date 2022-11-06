@@ -77,10 +77,21 @@
 
     gap: .5rem;
 
+    cursor: pointer;
+
     span {
         color: #5357B6;
         font-weight: 500;
         line-height: 1.5rem;
+
+        
+    }
+
+    &:hover {
+        span {
+            color: #C5C6EF;
+        }
+    
     }
 }
 
