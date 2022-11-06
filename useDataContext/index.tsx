@@ -1,6 +1,7 @@
 import { createContext, useReducer} from "react";
 
-import { DataContextType, StateType, ActionType, DataType, ReducerType } from "../TypesAndInterfaces";
+import { DataContextType, StateType, ActionType, DataType, ReducerType, CommentType, ThreadType } from "../TypesAndInterfaces";
+import generateID from "../utils/generateID";
 
 
 
@@ -38,12 +39,29 @@ const initState:StateType = {isLoaded: false};
 
 
 const reducer:ReducerType = (state:StateType, action:ActionType) => {
+
     switch (action.type) {
         case 'set-data':
             return {
                 isLoaded: true,
                 data: action.payload
             };
+        case 'add-thread':
+            if(!state.isLoaded)
+                return state;
+            
+            const newThreads = state.data.comments.slice();
+            newThreads.push(action.payload);
+
+            const newState = {
+                ...state,
+                data: {
+                    ...state.data,
+                    comments: newThreads
+                }
+            }            
+            
+            return newState;
         default:
             throw new Error();
     }
@@ -51,7 +69,7 @@ const reducer:ReducerType = (state:StateType, action:ActionType) => {
 }
 
 
-const useDataContext = () => {
+const useDataContext: () => DataContextType = () => {
     const [state, dispatch] = useReducer(reducer, initState);
 
 
@@ -64,9 +82,30 @@ const useDataContext = () => {
         payload: data
     });
 
+    const addThread = (content:string) => {
+        if(state.isLoaded) {
+            const thread:ThreadType = {
+                id: generateID(), 
+                content: content, 
+                createdAt: Date.now().toLocaleString(), 
+                score: 0, 
+                user: state.data.currentUser,
+                replies: []
+            }
+
+            dispatch({
+                type: 'add-thread',
+                payload:thread
+            })
+        
+        
+        }
+    }
+
     return {
         data: state.isLoaded? state.data : null,
-        setData
+        setData,
+        addThread
     }
 }
 

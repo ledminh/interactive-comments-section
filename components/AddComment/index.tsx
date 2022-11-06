@@ -1,17 +1,33 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useContext, useEffect, useState } from "react";
 
 import Image from 'next/image';
 
 import styles from './AddComment.module.scss';
+import { DataContext } from "../../useDataContext";
+import { DataContextType } from "../../TypesAndInterfaces";
 
 const AddComment:FunctionComponent = () => {
 
+    
+    const [comment, setComment] = useState("");
+    
+    const {addThread} = useContext(DataContext) as DataContextType;
+    
+    
+    
+    
+    const sendHandle = () => {
+        addThread(comment);
+        setComment("");
+    }
 
     return (
         <div className={styles.AddComment}>
             <textarea 
                 className={styles.textArea}
                 placeholder="Add a comment ..."
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
             />
             <div className={styles.footer}>
                 <Image 
@@ -20,7 +36,9 @@ const AddComment:FunctionComponent = () => {
                     width="32"
                     height="32"
                 />
-                <button>SEND</button>
+                <button onClick={sendHandle}>           
+                    SEND
+                </button>
             </div>
         </div>
     )

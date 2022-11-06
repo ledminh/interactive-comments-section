@@ -12,7 +12,7 @@ type UserInfo = {
     'username': string
 };
 
-type CommentType = {
+export type CommentType = {
     id: number,
     content: string,
     createdAt: string,
@@ -31,7 +31,8 @@ export interface ThreadType extends CommentType {
 
 
 export type DataType = {
-    comments: ThreadType[]
+    comments: ThreadType[],
+    currentUser: UserInfo
 }
 
 /******************
@@ -40,7 +41,8 @@ export type DataType = {
 
 export type DataContextType = {
     data: DataType | null,
-    setData: (data:DataType) => void| null
+    setData: (data:DataType) => void| null,
+    addThread: (content:string) => void
 
 }
 
@@ -62,6 +64,8 @@ export type StateType = {isLoaded: false}
     data: DataType
 }
 
-export type ActionType = {type:'set-data', payload: DataType};
+export type ActionType = {type:'set-data', payload: DataType}
+| {type: 'add-thread', payload: ThreadType}
+;
 
 export type ReducerType = Reducer<StateType, ActionType>;
