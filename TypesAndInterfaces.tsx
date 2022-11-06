@@ -50,7 +50,7 @@ export type DataContextType = {
  */
 export type CommentComponent = FunctionComponent<{ avatarURL: string,authorName: string, createdAt: string, content: string, score: number, replyingTo?: string }>;
 
-
+export type ModalComponent = FunctionComponent<{show:boolean, onClose?: () => void, children:JSX.Element[]|JSX.Element}>;
 
 /********************
  *  useReducer

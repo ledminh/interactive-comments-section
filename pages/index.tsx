@@ -14,6 +14,7 @@ import { DataType, ThreadType } from "../TypesAndInterfaces";
 import styles from '../styles/Home.module.scss';
 import { useContext, useEffect } from "react";
 import { DataContext } from "../useDataContext";
+import Modals from "../components/Modal";
 
 
 const Home:NextPage<{dataProps:DataType}> = ({dataProps}) =>{
@@ -39,6 +40,7 @@ const Home:NextPage<{dataProps:DataType}> = ({dataProps}) =>{
         }
         <AddComment />
       </main>
+      <Modals/>
     </>
   )
 }
