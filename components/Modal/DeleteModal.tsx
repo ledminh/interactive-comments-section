@@ -1,7 +1,11 @@
-import { FunctionComponent, useContext, useEffect } from "react";
-import { UIContext, uiControlType } from "../../useUIContext";
+import { FunctionComponent, useContext } from "react";
+import { UIContext } from "../../useUIContext";
+
+import styles from './DeleteModal.module.scss';
 
 import Modal from "./Modal";
+
+
 
 
 const DeleteModal:FunctionComponent = () => {
@@ -21,13 +25,15 @@ const DeleteModal:FunctionComponent = () => {
 
     return (
         <Modal show={showDeleteModal}>
-            <div>Delete comment</div>
-            <div>Are you sure you want to delete this comment? This will remove the comment and can&apos;t be undone.</div>
-            <div>
-                <button onClick={noHandle}>
+            <div className={styles.title}>Delete comment</div>
+            <div className={styles.content}>Are you sure you want to delete this comment? This will remove the comment and can&apos;t be undone.</div>
+            <div className={styles.buttons}>
+                <button className={styles.noButton}
+                    onClick={noHandle}>
                     NO, CANCEL
                 </button>
-                <button onClick={yesHandle}>
+                <button className={styles.yesButton} 
+                    onClick={yesHandle}>
                     YES, DELETE
                 </button>
             </div>            

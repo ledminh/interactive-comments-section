@@ -1,0 +1,55 @@
+.title {
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+    color: #334253;
+
+    margin-bottom: 1rem;
+}
+
+.content {
+    line-height: 1.5rem;
+    color: #67727E;
+
+    margin-bottom: 1rem;
+}
+
+.buttons {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+        border: none;
+        height: 3rem;
+        width: 45%;
+        border-radius: 8px;
+
+        color: white;
+
+        font-weight: 600;
+        line-height: 1.5rem;
+
+        &:active {
+            transform: scale(.95);
+            transition: transform .2s;
+        }
+    }
+}
+
+.noButton {
+    background-color: #67727E;
+
+    &:hover {
+        background-color: adjust-color($color:#67727E, $lightness: 10%);
+    }
+
+}
+
+.yesButton {
+    background-color: #ED6368;
+    &:hover {
+        background-color: adjust-color($color:#ED6368, $lightness: 10%);
+    }
+}
