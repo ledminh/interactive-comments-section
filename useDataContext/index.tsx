@@ -87,7 +87,7 @@ const useDataContext: () => DataContextType = () => {
             const thread:ThreadType = {
                 id: generateID(), 
                 content: content, 
-                createdAt: Date.now().toLocaleString(), 
+                createdAt: (new Date()).toUTCString(), 
                 score: 0, 
                 user: state.data.currentUser,
                 replies: []

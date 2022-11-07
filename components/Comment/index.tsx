@@ -10,6 +10,8 @@ import IconReply from '../../assets/images/icon-reply.svg';
 import { CommentComponent } from "../../TypesAndInterfaces";
 import { FunctionComponent, useEffect, useState } from 'react';
 
+import timeConvert from '../../utils/timeConvert';
+
 
 const Comment:CommentComponent = ({avatarURL, authorName, createdAt, content, score, replyingTo}) => {
 
@@ -29,7 +31,7 @@ const Comment:CommentComponent = ({avatarURL, authorName, createdAt, content, sc
                     {authorName}
                 </span>
                 <span className={styles.createdAt}>
-                    {createdAt}
+                    {timeConvert(Date.parse(createdAt))}
                 </span>
             </div>
             <div className={styles.content}>
