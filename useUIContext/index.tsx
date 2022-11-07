@@ -12,7 +12,7 @@ export const UIContext = createContext<uiControlType|null>(null);
 
 const useUIContext = () => {
     //Modals
-    const [showDeleteModal, setShowDeleteModal] = useState(true);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
 
 

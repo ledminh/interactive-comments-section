@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext, useEffect, useState } from "react";
+import { FunctionComponent, useContext, useState } from "react";
 
 import Image from 'next/image';
 
@@ -11,7 +11,7 @@ const AddComment:FunctionComponent = () => {
     
     const [comment, setComment] = useState("");
     
-    const {addThread} = useContext(DataContext) as DataContextType;
+    const {addThread, data} = useContext(DataContext) as DataContextType;
     
     
     
@@ -33,7 +33,7 @@ const AddComment:FunctionComponent = () => {
             />
             <div className={styles.footer}>
                 <Image 
-                    src="/images/avatars/image-amyrobson.png"
+                    src={data? data.currentUser.image.png.slice(1): ''}
                     alt="avatar"
                     width="32"
                     height="32"
