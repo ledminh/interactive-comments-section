@@ -14,9 +14,9 @@ import timeConvert from '../../utils/timeConvert';
 import { DataContext } from '../../useDataContext';
 
 
-const Comment:CommentComponent = ({id,avatarURL, authorName, createdAt, content, score, replyingTo}) => {
+const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, createdAt, content, score, replyingTo}) => {
 
-    const {upVote, downVote} = useContext(DataContext) as DataContextType;
+    const {setScore} = useContext(DataContext) as DataContextType;
     
 
     return (
@@ -43,11 +43,17 @@ const Comment:CommentComponent = ({id,avatarURL, authorName, createdAt, content,
             <div className={styles.footer}>
                 <div className={styles.score}>
                     <Button type="PLUS"
-                        onClick={() => upVote(id)}
+                        onClick={() => {
+                            setScore(type, id, score + 1, parentID);
+                        }}
                     />
                     <span>{score}</span>
                     <Button type="MINUS"
-                        onClick={() => downVote(id)}
+                        onClick={() => {
+                            if(score === 0) return;
+                            
+                            setScore(type, id, score - 1, parentID);
+                        }}
                     />
                 </div>
                 <div className={styles.functions}>

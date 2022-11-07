@@ -1,6 +1,6 @@
 import { createContext, useReducer} from "react";
 
-import { DataContextType, StateType, ActionType, DataType, ReducerType, CommentType, ThreadType } from "../TypesAndInterfaces";
+import { DataContextType, StateType, ActionType, DataType, ReducerType, CommentType, ThreadType, ReplyType } from "../TypesAndInterfaces";
 import generateID from "../utils/generateID";
 
 
@@ -37,7 +37,7 @@ const reducer:ReducerType = (state:StateType, action:ActionType) => {
                 return newState;
             }
             
-        case 'set-score':
+        case 'set-score/thread':
             if(!state.isLoaded)
                 return state;
             {
@@ -46,6 +46,29 @@ const reducer:ReducerType = (state:StateType, action:ActionType) => {
                 const thread = newThreads.find(t => t.id === action.payload.id);
                 
                 (thread as ThreadType).score = action.payload.score;
+
+                const newState = {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        comments: newThreads
+                    }
+                }
+
+                return newState;
+            }
+
+        case 'set-score/reply':
+            if(!state.isLoaded)
+                return state;
+            {
+                const newThreads = state.data.comments.slice();
+
+                const thread = newThreads.find(t => t.id === action.payload.parentID);
+                
+                const reply = (thread as ThreadType).replies.find(rep => rep.id === action.payload.id);
+                
+                (reply as ReplyType).score = action.payload.score; 
 
                 const newState = {
                     ...state,
@@ -97,31 +120,24 @@ const useDataContext: () => DataContextType = () => {
         }
     }
 
-    const upVote = (id:number) => {
+
+    function setScore (type:'THREAD'|'REPLY', id:number, score:number, parentID?:number):void {
         if(!state.isLoaded) return;
-
-        const currentScore = state.data.comments.find(c => c.id === id)?.score;
-
-        if(currentScore === undefined) return;
-        dispatch({type: 'set-score', payload: {id:id, score: currentScore + 1}})
-    } 
-
-    const downVote = (id:number) => {
-        if(!state.isLoaded) return;
-
-        const currentScore = state.data.comments.find(c => c.id === id)?.score;
         
-        if(currentScore === undefined || currentScore === 0) return;
-        
-        dispatch({type: 'set-score', payload: {id:id, score: currentScore - 1}})
+        if(type === 'THREAD')
+            dispatch({type:'set-score/thread', payload:{id:id, score: score}})
+        else {
+            dispatch({type:'set-score/reply', payload:{id:id, score: score, parentID:parentID as number}})
+        }
     }
+
+
 
     return {
         data: state.isLoaded? state.data : null,
         setData,
         addThread,
-        upVote,
-        downVote
+        setScore
     }
 }
 
