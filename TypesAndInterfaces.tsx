@@ -43,14 +43,15 @@ export type DataContextType = {
     data: DataType | null,
     setData: (data:DataType) => void| null,
     addThread: (content:string) => void
-
+    upVote: (id:number) => void,
+    downVote: (id:number) => void
 }
 
 
 /***********************************
  * Function/Component interfaces
  */
-export type CommentComponent = FunctionComponent<{ avatarURL: string,authorName: string, createdAt: string, content: string, score: number, replyingTo?: string }>;
+export type CommentComponent = FunctionComponent<{ id:number, avatarURL: string,authorName: string, createdAt: string, content: string, score: number, replyingTo?: string }>;
 
 export type ModalComponent = FunctionComponent<{show:boolean, onClose?: () => void, children:JSX.Element[]|JSX.Element}>;
 
@@ -66,6 +67,6 @@ export type StateType = {isLoaded: false}
 
 export type ActionType = {type:'set-data', payload: DataType}
 | {type: 'add-thread', payload: ThreadType}
-;
+| {type: 'set-score', payload: {id:number, score: number}};
 
 export type ReducerType = Reducer<StateType, ActionType>;

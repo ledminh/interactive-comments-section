@@ -7,14 +7,17 @@ import IconPlus from '../../assets/images/icon-plus.svg';
 import IconMinus from '../../assets/images/icon-minus.svg';
 import IconReply from '../../assets/images/icon-reply.svg';
 
-import { CommentComponent } from "../../TypesAndInterfaces";
-import { FunctionComponent, useEffect, useState } from 'react';
+import { CommentComponent, DataContextType } from "../../TypesAndInterfaces";
+import { FunctionComponent, useContext, useState, useEffect } from 'react';
 
 import timeConvert from '../../utils/timeConvert';
+import { DataContext } from '../../useDataContext';
 
 
-const Comment:CommentComponent = ({avatarURL, authorName, createdAt, content, score, replyingTo}) => {
+const Comment:CommentComponent = ({id,avatarURL, authorName, createdAt, content, score, replyingTo}) => {
 
+    const {upVote, downVote} = useContext(DataContext) as DataContextType;
+    
 
     return (
         <div className={styles.Comment}>
@@ -39,9 +42,13 @@ const Comment:CommentComponent = ({avatarURL, authorName, createdAt, content, sc
             </div>
             <div className={styles.footer}>
                 <div className={styles.score}>
-                    <Button type="PLUS"/>
+                    <Button type="PLUS"
+                        onClick={() => upVote(id)}
+                    />
                     <span>{score}</span>
-                    <Button type="MINUS"/>
+                    <Button type="MINUS"
+                        onClick={() => downVote(id)}
+                    />
                 </div>
                 <div className={styles.functions}>
                     <Reply />
@@ -57,7 +64,9 @@ export default Comment;
 
 /**************************************/
 
-const Button:FunctionComponent<{type:"PLUS"|"MINUS"}> = ({type, ...props}) => {
+type PlusMinusButtonType = FunctionComponent<{type:"PLUS"|"MINUS", onClick: () => void}>; 
+
+const Button:PlusMinusButtonType = ({type, ...props}) => {
     const [hover, setHover] = useState(false);
 
 

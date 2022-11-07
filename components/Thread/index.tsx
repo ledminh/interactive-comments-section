@@ -10,6 +10,7 @@ const Thread:FunctionComponent<{data:ThreadType}> = ({data}) => {
         <div className={styles.Thread}>
             <div className={styles.mainComment}>
                 <Comment 
+                    id={data.id}
                     avatarURL={data.user.image.png}
                     authorName={data.user.username}
                     createdAt={data.createdAt}
@@ -24,6 +25,7 @@ const Thread:FunctionComponent<{data:ThreadType}> = ({data}) => {
                         data.replies.map(Rep => (
                             <Comment 
                                 key={Rep.content}
+                                id={data.id}
                                 avatarURL={Rep.user.image.png}
                                 authorName={Rep.user.username}
                                 createdAt={Rep.createdAt}
