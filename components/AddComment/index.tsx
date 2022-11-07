@@ -17,6 +17,8 @@ const AddComment:FunctionComponent = () => {
     
     
     const sendHandle = () => {
+        if(comment === '') return;
+        
         addThread(comment);
         setComment("");
     }
