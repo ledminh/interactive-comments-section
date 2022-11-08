@@ -67,10 +67,10 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                     {
                         data?.currentUser.id === authorID ?
                         <>
-                            <Delete/>
-                            <Edit/>
+                            <FunctionButton type = 'DELETE' />
+                            <FunctionButton type = 'EDIT' />
                         </>
-                        : <Reply />
+                        : <FunctionButton type = 'REPLY' />
                     }
                 </div>
             </div>
@@ -109,54 +109,37 @@ const Button:PlusMinusButtonType = ({type, ...props}) => {
     )
 }
 
-const Reply:FunctionComponent = (props) => {
+
+type FunctionButtonType = FunctionComponent<{type: 'REPLY' | 'DELETE' | 'EDIT'}>; 
+
+const FunctionButton:FunctionButtonType = ({type, ...props}) => {
     const [hover, setHover] = useState(false);
 
+    let styleName = type === 'REPLY'? 'reply': type === 'DELETE'? 'delete': 'edit',
+        onHoverColor = type === 'REPLY'? '#C5C6EF': type === 'DELETE'? '#FFB8BB': '#C5C6EF',
+        color = type === 'REPLY'? '#5357B6': type === 'DELETE'? '#ED6368': '#5357B6',
+        text = type === 'REPLY'? 'Reply': type === 'DELETE'? 'Delete': 'Edit';
+        
+
     return (
-        <div className={styles.reply}
+        <div className={styles[styleName]}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             {...props}
         >
-            <IconReply
-                fill={hover? '#C5C6EF': '#5357B6'}
-            />
-            <span>Reply</span>
-        </div>
-    )
-}
-
-const Delete:FunctionComponent = (props) => {
-    const [hover, setHover] = useState(false);
-
-    return (
-        <div className={styles.delete}
-            onMouseEnter={() => setHover(true)}
-            onMouseLeave={() => setHover(false)}
-            {...props}
-        >
-            <IconDelete
-                fill={hover? '#FFB8BB': '#ED6368'}
-            />
-            <span>Delete</span>
-        </div>
-    )
-}
-
-
-const Edit:FunctionComponent = (props) => {
-    const [hover, setHover] = useState(false);
-
-    return (
-        <div className={styles.edit}
-            onMouseEnter={() => setHover(true)}
-            onMouseLeave={() => setHover(false)}
-            {...props}
-        >
-            <IconEdit
-                fill={hover? '#C5C6EF': '#5357B6'}
-            />
-            <span>Edit</span>
+            {
+                type === 'REPLY'?
+                <IconReply
+                    fill={hover? onHoverColor: color}
+                />: type === 'DELETE'?
+                <IconDelete
+                    fill={hover? onHoverColor: color}
+                />: <IconEdit
+                    fill={hover? onHoverColor: color}
+                />
+            }
+            
+            <span>{text}</span>
         </div>
     )
 }
