@@ -82,7 +82,19 @@
     }
 }
 
-.reply {
+.functions {
+    display: flex;
+    flex-flow: row nowrap;
+
+    gap: 1rem;
+    
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reply,
+.delete,
+.edit {
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
@@ -106,5 +118,16 @@
         }
     
     }
+}
+
+.delete {
+    span {
+        color:#ED6368;
+        
+        &:hover {
+            color: #FFB8BB;
+        }
+    }
+
 }
 

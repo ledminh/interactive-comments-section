@@ -6,6 +6,9 @@ import Image from "next/image";
 import IconPlus from '../../assets/images/icon-plus.svg';
 import IconMinus from '../../assets/images/icon-minus.svg';
 import IconReply from '../../assets/images/icon-reply.svg';
+import IconDelete from '../../assets/images/icon-delete.svg';
+import IconEdit from '../../assets/images/icon-edit.svg';
+
 
 import { CommentComponent, DataContextType } from "../../TypesAndInterfaces";
 import { FunctionComponent, useContext, useState, useEffect } from 'react';
@@ -61,7 +64,14 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                     />
                 </div>
                 <div className={styles.functions}>
-                    <Reply />
+                    {
+                        data?.currentUser.id === authorID ?
+                        <>
+                            <Delete/>
+                            <Edit/>
+                        </>
+                        : <Reply />
+                    }
                 </div>
             </div>
         </div>
@@ -112,6 +122,41 @@ const Reply:FunctionComponent = (props) => {
                 fill={hover? '#C5C6EF': '#5357B6'}
             />
             <span>Reply</span>
+        </div>
+    )
+}
+
+const Delete:FunctionComponent = (props) => {
+    const [hover, setHover] = useState(false);
+
+    return (
+        <div className={styles.delete}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+            {...props}
+        >
+            <IconDelete
+                fill={hover? '#FFB8BB': '#ED6368'}
+            />
+            <span>Delete</span>
+        </div>
+    )
+}
+
+
+const Edit:FunctionComponent = (props) => {
+    const [hover, setHover] = useState(false);
+
+    return (
+        <div className={styles.edit}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+            {...props}
+        >
+            <IconEdit
+                fill={hover? '#C5C6EF': '#5357B6'}
+            />
+            <span>Edit</span>
         </div>
     )
 }
