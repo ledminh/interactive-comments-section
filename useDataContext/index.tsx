@@ -103,7 +103,7 @@ const useDataContext: () => DataContextType = () => {
     const addThread = (content:string) => {
         if(state.isLoaded) {
             const thread:ThreadType = {
-                id: generateID(), 
+                id: generateID() + '', 
                 content: content, 
                 createdAt: (new Date()).toUTCString(), 
                 score: 0, 
@@ -121,13 +121,13 @@ const useDataContext: () => DataContextType = () => {
     }
 
 
-    function setScore (type:'THREAD'|'REPLY', id:number, score:number, parentID?:number):void {
+    function setScore (type:'THREAD'|'REPLY', id:string, score:number, parentID?:string):void {
         if(!state.isLoaded) return;
         
         if(type === 'THREAD')
             dispatch({type:'set-score/thread', payload:{id:id, score: score}})
         else {
-            dispatch({type:'set-score/reply', payload:{id:id, score: score, parentID:parentID as number}})
+            dispatch({type:'set-score/reply', payload:{id:id, score: score, parentID:parentID as string}})
         }
     }
 

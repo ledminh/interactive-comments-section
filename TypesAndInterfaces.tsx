@@ -44,7 +44,7 @@ export type DataContextType = {
     data: DataType | null,
     setData: (data:DataType) => void| null,
     addThread: (content:string) => void,
-    setScore: ((type:'THREAD'|'REPLY', id:number, score:number, parentID?:number) => void)
+    setScore: ((type:'THREAD'|'REPLY', id:string, score:number, parentID?:string) => void)
     
 }
 
@@ -52,7 +52,7 @@ export type DataContextType = {
 /***********************************
  * Function/Component interfaces
  */
-export type CommentComponent = FunctionComponent<{ type: 'THREAD'|'REPLY', parentID?:number, id:number, avatarURL: string,authorName: string, createdAt: string, content: string, score: number, replyingTo?: string }>;
+export type CommentComponent = FunctionComponent<{ type: 'THREAD'|'REPLY', parentID?:string, id:string, avatarURL: string,authorName: string, createdAt: string, content: string, score: number, replyingTo?: string }>;
 
 export type ModalComponent = FunctionComponent<{show:boolean, onClose?: () => void, children:JSX.Element[]|JSX.Element}>;
 
@@ -68,7 +68,7 @@ export type StateType = {isLoaded: false}
 
 export type ActionType = {type:'set-data', payload: DataType}
 | {type: 'add-thread', payload: ThreadType}
-| {type: 'set-score/thread', payload: {id:number, score: number}}
-|{type: 'set-score/reply', payload: {id:number, score: number, parentID: number}};
+| {type: 'set-score/thread', payload: {id:string, score: number}}
+|{type: 'set-score/reply', payload: {id:string, score: number, parentID: string}};
 
 export type ReducerType = Reducer<StateType, ActionType>;
