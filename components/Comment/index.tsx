@@ -14,11 +14,9 @@ import timeConvert from '../../utils/timeConvert';
 import { DataContext } from '../../useDataContext';
 
 
-const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, createdAt, content, score, replyingTo}) => {
+const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, authorID, createdAt, content, score, replyingTo}) => {
 
     const {data, setScore} = useContext(DataContext) as DataContextType;
-
-
 
     return (
         <div className={styles.Comment}>
@@ -35,7 +33,9 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, cr
                     {authorName}
                 </span>
                 {
+                    data?.currentUser.id === authorID ?
                     <span className={styles.you}>you</span>
+                    : null
                 }
                 <span className={styles.createdAt}>
                     {timeConvert(Date.parse(createdAt))}

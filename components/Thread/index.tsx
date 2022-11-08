@@ -14,6 +14,7 @@ const Thread:FunctionComponent<{data:ThreadType}> = ({data}) => {
                     id={data.id}
                     avatarURL={data.user.image.png}
                     authorName={data.user.username}
+                    authorID={data.user.id}
                     createdAt={data.createdAt}
                     content={data.content}
                     score={data.score}
@@ -31,6 +32,7 @@ const Thread:FunctionComponent<{data:ThreadType}> = ({data}) => {
                                 parentID={data.id}
                                 avatarURL={Rep.user.image.png}
                                 authorName={Rep.user.username}
+                                authorID={Rep.user.id}
                                 createdAt={Rep.createdAt}
                                 content={Rep.content}
                                 score={Rep.score}

@@ -52,7 +52,7 @@ export type DataContextType = {
 /***********************************
  * Function/Component interfaces
  */
-export type CommentComponent = FunctionComponent<{ type: 'THREAD'|'REPLY', parentID?:string, id:string, avatarURL: string,authorName: string, createdAt: string, content: string, score: number, replyingTo?: string }>;
+export type CommentComponent = FunctionComponent<{ type: 'THREAD'|'REPLY', parentID?:string, id:string, avatarURL: string,authorName: string, authorID:string, createdAt: string, content: string, score: number, replyingTo?: string }>;
 
 export type ModalComponent = FunctionComponent<{show:boolean, onClose?: () => void, children:JSX.Element[]|JSX.Element}>;
 
