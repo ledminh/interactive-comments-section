@@ -4,7 +4,8 @@ import { FunctionComponent, Dispatch, SetStateAction, Reducer } from "react";
 /**************************
  * Data 
  */
-type UserInfo = {
+export type UserInfo = {
+    id: string,
     'image': { 
         png: string,
         webp: string
@@ -13,7 +14,7 @@ type UserInfo = {
 };
 
 export type CommentType = {
-    id: number,
+    id: string,
     content: string,
     createdAt: string,
     score: number,
