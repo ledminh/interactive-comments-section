@@ -16,8 +16,9 @@ import { DataContext } from '../../useDataContext';
 
 const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, createdAt, content, score, replyingTo}) => {
 
-    const {setScore} = useContext(DataContext) as DataContextType;
-    
+    const {data, setScore} = useContext(DataContext) as DataContextType;
+
+
 
     return (
         <div className={styles.Comment}>
@@ -33,6 +34,9 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, cr
                 <span className={styles.authorName}>
                     {authorName}
                 </span>
+                {
+                    <span className={styles.you}>you</span>
+                }
                 <span className={styles.createdAt}>
                     {timeConvert(Date.parse(createdAt))}
                 </span>
