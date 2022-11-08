@@ -4,7 +4,7 @@ import { FunctionComponent, Dispatch, SetStateAction, Reducer } from "react";
 /**************************
  * Data 
  */
-type UserInfo = {
+export type UserInfo = {
     'image': { 
         png: string,
         webp: string

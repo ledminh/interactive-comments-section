@@ -32,12 +32,17 @@ const AddComment:FunctionComponent = () => {
                 onChange={(e) => setComment(e.target.value)}
             />
             <div className={styles.footer}>
-                <Image 
-                    src={data? data.currentUser.image.png.slice(1): ''}
-                    alt="avatar"
-                    width="32"
-                    height="32"
-                />
+                {
+                    data
+                    ?<Image 
+                        src={data.currentUser.image.png.slice(1)}
+                        alt="avatar"
+                        width="32"
+                        height="32"
+                    />
+                    : null
+                }
+
                 <button onClick={sendHandle}>           
                     SEND
                 </button>
