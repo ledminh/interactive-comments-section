@@ -42,6 +42,7 @@
 .content {
     margin-bottom: 1rem;
     line-height: 1.5rem;
+    
 }
 
 .footer {
@@ -164,8 +165,10 @@
         }
     }
 
+    .main {
+        flex-basis: 100%;
+    }
     .functions {
         margin-left: auto;
     }
 }
-
