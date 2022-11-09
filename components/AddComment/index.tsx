@@ -31,22 +31,26 @@ const AddComment:FunctionComponent = () => {
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
             />
-            <div className={styles.footer}>
-                {
-                    data
-                    ?<Image 
+            {
+                data
+                ?
+                <div className={styles.avatar}>
+                    <Image 
                         src={data.currentUser.image.png.slice(1)}
                         alt="avatar"
                         width="32"
                         height="32"
                     />
-                    : null
-                }
+                </div>
+                : null
+            }
 
-                <button onClick={sendHandle}>           
-                    SEND
-                </button>
-            </div>
+            <button className={styles.button}
+                onClick={sendHandle}>           
+                SEND
+            </button>
+            {/* <div className={styles.footer}>
+            </div> */}
         </div>
     )
 }
