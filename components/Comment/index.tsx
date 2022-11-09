@@ -19,29 +19,58 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
     const {data} = useContext(DataContext) as DataContextType;
 
     return (
-        <div className={styles.Comment}>
-            <div className={styles.meta}>
-                <Avatar 
-                    avatarURL={avatarURL}  
-                    authorName={authorName}
-                />
-                <AuthorName authorName={authorName}/>
-                <You show={data?.currentUser.id === authorID} />
-                <CreatedAt createdAt={createdAt} />
-            </div>
-            
-            <Content content={content}/>
-
-            <div className={styles.footer}>
-                <Score 
-                    type={type} 
-                    id={id} 
-                    parentID={parentID} 
-                    score={score} 
+        <>
+            <div className={styles.Comment}>
+                <div className={styles.meta}>
+                    <Avatar 
+                        avatarURL={avatarURL}  
+                        authorName={authorName}
                     />
-                <FunctionButtons authorID={authorID}/>
+                    <AuthorName authorName={authorName}/>
+                    <You show={data?.currentUser.id === authorID} />
+                    <CreatedAt createdAt={createdAt} />
+                </div>
+                
+                <Content content={content}/>
+
+                <div className={styles.footer}>
+                    <Score 
+                        type={type} 
+                        id={id} 
+                        parentID={parentID} 
+                        score={score} 
+                        />
+                    <FunctionButtons authorID={authorID}/>
+                </div>
             </div>
-        </div>
+
+            <></>
+            
+            <div className={styles.Comment_fullscreen}>
+                <div className={styles.side}>
+                    <Score 
+                        type={type} 
+                        id={id} 
+                        parentID={parentID} 
+                        score={score} 
+                        />
+                </div>
+                <div className={styles.main}>
+                    <div className={styles.meta}>
+                        <Avatar 
+                            avatarURL={avatarURL}  
+                            authorName={authorName}
+                        />
+                        <AuthorName authorName={authorName}/>
+                        <You show={data?.currentUser.id === authorID} />
+                        <CreatedAt createdAt={createdAt} />
+                        <FunctionButtons authorID={authorID}/>
+                    </div>
+
+                    <Content content={content}/>
+                </div>
+            </div>
+        </>
     )
 
 }
