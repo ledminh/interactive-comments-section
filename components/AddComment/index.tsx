@@ -49,8 +49,6 @@ const AddComment:FunctionComponent = () => {
                 onClick={sendHandle}>           
                 SEND
             </button>
-            {/* <div className={styles.footer}>
-            </div> */}
         </div>
     )
 }
