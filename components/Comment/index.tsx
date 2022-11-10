@@ -31,7 +31,9 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                     <CreatedAt createdAt={createdAt} />
                 </div>
                 
-                <Content content={content}/>
+                <Content
+                    replyingTo={replyingTo}
+                    content={content}/>
 
                 <div className={styles.footer}>
                     <Score 
@@ -77,7 +79,10 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                             />
                     </div>
 
-                    <Content content={content}/>
+                    <Content 
+                        replyingTo={replyingTo}
+                        content={content}
+                        />
                 </div>
             </div>
         </>
@@ -130,11 +135,12 @@ const CreatedAt:FunctionComponent<{createdAt: string}> = ({createdAt}) => {
     )
 }
 
-const Content:FunctionComponent<{content:string}> = ({content}) => {
+const Content:FunctionComponent<{content:string, replyingTo:string|undefined}> = ({content, replyingTo}) => {
 
     return (
         <div className={styles.content}>
-            {content}
+            <span className={styles.replyingTo}>{replyingTo? '@' + replyingTo + ' ' : ''}</span>
+            <span>{content}</span>
         </div>
     );
 } 
