@@ -1,6 +1,6 @@
-import { createContext, useReducer} from "react";
+import { createContext, useReducer, useState} from "react";
 
-import { DataContextType, StateType, ActionType, DataType, ReducerType, CommentType, ThreadType, ReplyType } from "../TypesAndInterfaces";
+import { DataContextType, StateType, ActionType, DataType, ReducerType, CommentType, ThreadType, ReplyType, CommentToDeleteType } from "../TypesAndInterfaces";
 import generateID from "../utils/generateID";
 
 
@@ -19,6 +19,7 @@ const reducer:ReducerType = (state:StateType, action:ActionType) => {
                 isLoaded: true,
                 data: action.payload
             };
+       
         case 'add-thread':
             if(!state.isLoaded)
                 return state;
@@ -35,8 +36,8 @@ const reducer:ReducerType = (state:StateType, action:ActionType) => {
                 }            
 
                 return newState;
-            }
-            
+            }     
+        
         case 'set-score/thread':
             if(!state.isLoaded)
                 return state;
@@ -57,7 +58,7 @@ const reducer:ReducerType = (state:StateType, action:ActionType) => {
 
                 return newState;
             }
-
+        
         case 'set-score/reply':
             if(!state.isLoaded)
                 return state;
@@ -80,6 +81,47 @@ const reducer:ReducerType = (state:StateType, action:ActionType) => {
 
                 return newState;
             }
+        
+        case 'delete/thread': 
+            if(!state.isLoaded) return state;
+
+            {
+
+                const newThreads = state.data.comments.filter(t => t.id !== action.payload.threadID);
+
+                return {
+                    ...state,
+                    data : {
+                        ...state.data,
+                        comments: newThreads
+                    }
+                }
+
+            }
+
+
+        case 'delete/reply':
+            if(!state.isLoaded) return state;
+
+            {
+                const newThreads = state.data.comments.slice();
+
+                const thread  = newThreads.find(t => t.id === action.payload.threadID);
+
+                if(thread !== undefined){
+                    thread.replies = thread.replies.filter(r => r.id !== action.payload.replyID);
+                    return {
+                        ...state,
+                        data: {
+                            ...state.data,
+                            comments: newThreads
+                        }
+                    }
+                }
+
+                return state
+            }
+        
         default:
             throw new Error();
     }
@@ -90,7 +132,7 @@ const reducer:ReducerType = (state:StateType, action:ActionType) => {
 const useDataContext: () => DataContextType = () => {
     const [state, dispatch] = useReducer(reducer, initState);
 
-
+    const [commentToDelete, setCommentToDelete] = useState<CommentToDeleteType|null>(null);
     
 
     /*********************************************************/
@@ -119,8 +161,8 @@ const useDataContext: () => DataContextType = () => {
         
         }
     }
-
-
+    
+    
     function setScore (type:'THREAD'|'REPLY', id:string, score:number, parentID?:string):void {
         if(!state.isLoaded) return;
         
@@ -132,12 +174,24 @@ const useDataContext: () => DataContextType = () => {
     }
 
     
+    function deleteComment () {
+        if(!state.isLoaded || commentToDelete === null) return;
+
+        if(commentToDelete.commentType === 'THREAD'){
+            dispatch({type:'delete/thread', payload:{threadID:commentToDelete.threadID}});
+        }
+        else {
+            dispatch({type:'delete/reply', payload:{threadID:commentToDelete.threadID, replyID:commentToDelete.replyID as string}})
+        }
+    } 
 
     return {
         data: state.isLoaded? state.data : null,
         setData,
         addThread,
-        setScore
+        setScore,
+        setCommentToDelete,
+        deleteComment
     }
 }
 

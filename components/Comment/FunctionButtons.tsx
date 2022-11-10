@@ -6,23 +6,33 @@ import { FunctionComponent, useState, useContext } from "react";
 
 
 import { DataContext } from "../../useDataContext";
-import { DataContextType } from "../../TypesAndInterfaces";
+import { DataContextType, FunctionButtonsType } from "../../TypesAndInterfaces";
 
 import styles from './Comment.module.scss';
+import { UIContext, uiControlType } from '../../useUIContext';
 
-const FunctionButtons:FunctionComponent<{authorID: string}> = ({authorID}) => {
 
-    const {data} = useContext(DataContext) as DataContextType;
+const FunctionButtons:FunctionButtonsType = ({authorID, commentType, threadID, replyID}) => {
 
+    const {data, setCommentToDelete} = useContext(DataContext) as DataContextType;
+    const {setShowDeleteModal} = useContext(UIContext) as uiControlType;
+
+    const deleteHandle = () => {
+        setCommentToDelete({commentType: commentType, 
+                            threadID: threadID, 
+                            replyID: commentType === 'REPLY'? replyID: undefined});        
+        
+        setShowDeleteModal(true);
+    }
     return (
         <div className={styles.functions}>
             {
                 data?.currentUser.id === authorID ?
                 <>
-                    <FunctionButton type = 'DELETE' />
-                    <FunctionButton type = 'EDIT' />
+                    <FunctionButton type = 'DELETE' onClick={() => deleteHandle()}/>
+                    <FunctionButton type = 'EDIT' onClick={() => {}}/>
                 </>
-                : <FunctionButton type = 'REPLY' />
+                : <FunctionButton type = 'REPLY' onClick={() => {}}/>
             }
         </div>
     );
@@ -32,9 +42,9 @@ export default FunctionButtons;
 
 /*********************************************/
 
-type FunctionButtonType = FunctionComponent<{type: 'REPLY' | 'DELETE' | 'EDIT'}>; 
+type FunctionButtonType = FunctionComponent<{type: 'REPLY' | 'DELETE' | 'EDIT', onClick: () => void}>; 
 
-const FunctionButton:FunctionButtonType = ({type, ...props}) => {
+const FunctionButton:FunctionButtonType = ({type, onClick, ...props}) => {
     const [hover, setHover] = useState(false);
 
     let styleName = type === 'REPLY'? 'reply': type === 'DELETE'? 'delete': 'edit',
@@ -47,6 +57,7 @@ const FunctionButton:FunctionButtonType = ({type, ...props}) => {
         <div className={styles[styleName]}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
+            onClick={onClick}
             {...props}
         >
             {

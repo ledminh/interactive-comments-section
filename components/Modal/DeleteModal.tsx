@@ -1,4 +1,6 @@
 import { FunctionComponent, useContext } from "react";
+import { DataContextType } from "../../TypesAndInterfaces";
+import { DataContext } from "../../useDataContext";
 import { UIContext } from "../../useUIContext";
 
 import styles from './DeleteModal.module.scss';
@@ -11,7 +13,7 @@ import Modal from "./Modal";
 const DeleteModal:FunctionComponent = () => {
     
     const uiControl = useContext(UIContext);
-
+    const {deleteComment} = useContext(DataContext) as DataContextType;
 
     if(uiControl === null) return null;
     
@@ -20,6 +22,7 @@ const DeleteModal:FunctionComponent = () => {
     
     const noHandle = () => setShowDeleteModal(false);
     const yesHandle = () => {
+        deleteComment();
         setShowDeleteModal(false);
     }
 

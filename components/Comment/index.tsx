@@ -40,7 +40,12 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                         parentID={parentID} 
                         score={score} 
                         />
-                    <FunctionButtons authorID={authorID}/>
+                    <FunctionButtons 
+                        authorID={authorID}
+                        commentType={type} 
+                        threadID={type === 'THREAD'? id : parentID as string}  
+                        replyID={id}
+                        />
                 </div>
             </div>
 
@@ -64,7 +69,12 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                         <AuthorName authorName={authorName}/>
                         <You show={data?.currentUser.id === authorID} />
                         <CreatedAt createdAt={createdAt} />
-                        <FunctionButtons authorID={authorID}/>
+                        <FunctionButtons 
+                            authorID={authorID}
+                            commentType={type} 
+                            threadID={type === 'THREAD'? id : parentID as string}  
+                            replyID={id}
+                            />
                     </div>
 
                     <Content content={content}/>
