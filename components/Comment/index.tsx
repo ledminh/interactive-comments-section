@@ -6,7 +6,7 @@ import Image from "next/image";
 
 
 import { CommentComponent, DataContextType } from "../../TypesAndInterfaces";
-import { FunctionComponent, useContext, useState } from 'react';
+import { FunctionComponent, useContext, useRef, useState } from 'react';
 
 import timeConvert from '../../utils/timeConvert';
 import { DataContext } from '../../useDataContext';
@@ -19,6 +19,17 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
 
     const {data} = useContext(DataContext) as DataContextType;
     const [showAddComment, setShowAddComment] = useState(false);
+
+    const textArea = useRef<HTMLTextAreaElement>(null);
+    const [textAreaValue, setTextAreaValue] = useState(content);
+    const [showTextArea, _setShowTextArea] = useState(false);
+
+    const setShowTextArea = () => {
+        textArea.current?.focus();
+        _setShowTextArea(true);
+    }
+
+
 
     return (
         <>
@@ -33,9 +44,18 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                     <CreatedAt createdAt={createdAt} />
                 </div>
                 
-                <Content
-                    replyingTo={replyingTo}
-                    content={content}/>
+                {
+                    showTextArea?
+                    <textarea 
+                        className={styles.textArea}
+                        value={textAreaValue}
+                        ref={textArea}
+                        onChange={(e) => setTextAreaValue(e.target.value)}
+                    />: <Content 
+                            replyingTo={replyingTo}
+                            content={content}
+                            />
+                }
 
                 <div className={styles.footer}>
                     <Score 
@@ -50,7 +70,7 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                         threadID={type === 'THREAD'? id : parentID as string}  
                         replyID={id}
                         setShowAddComment={setShowAddComment}
-
+                        setShowTextArea={setShowTextArea}
                         />
                 </div>
             </div>
@@ -81,13 +101,22 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                             threadID={type === 'THREAD'? id : parentID as string}  
                             replyID={id}
                             setShowAddComment={setShowAddComment}
+                            setShowTextArea={setShowTextArea}
                             />
+                            
                     </div>
-
-                    <Content 
-                        replyingTo={replyingTo}
-                        content={content}
-                        />
+                    {
+                        showTextArea?
+                        <textarea 
+                            className={styles.textArea}
+                            value={textAreaValue}
+                            ref={textArea}
+                            onChange={(e) => setTextAreaValue(e.target.value)}
+                        />: <Content 
+                                replyingTo={replyingTo}
+                                content={content}
+                                />
+                    }                   
                 </div>
             </div>
             {

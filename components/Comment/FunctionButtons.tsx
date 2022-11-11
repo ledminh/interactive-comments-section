@@ -12,7 +12,7 @@ import styles from './Comment.module.scss';
 import { UIContext, uiControlType } from '../../useUIContext';
 
 
-const FunctionButtons:FunctionButtonsType = ({authorID, commentType, threadID, replyID, setShowAddComment}) => {
+const FunctionButtons:FunctionButtonsType = ({authorID, commentType, threadID, replyID, setShowAddComment, setShowTextArea}) => {
 
     const {data, setCommentToDelete} = useContext(DataContext) as DataContextType;
     const {setShowDeleteModal} = useContext(UIContext) as uiControlType;
@@ -29,13 +29,17 @@ const FunctionButtons:FunctionButtonsType = ({authorID, commentType, threadID, r
         setShowAddComment(true);
     }
 
+    const editHandle = () => {
+        setShowTextArea(true);
+    }
+
     return (
         <div className={styles.functions}>
             {
                 data?.currentUser.id === authorID ?
                 <>
                     <FunctionButton type = 'DELETE' onClick={() => deleteHandle()}/>
-                    <FunctionButton type = 'EDIT' onClick={() => {}}/>
+                    <FunctionButton type = 'EDIT' onClick={editHandle}/>
                 </>
                 : <FunctionButton type = 'REPLY' onClick={replyHandle}/>
             }
