@@ -1,6 +1,7 @@
 import { createContext, useReducer, useState} from "react";
+import { threadId } from "worker_threads";
 
-import { DataContextType, StateType, ActionType, DataType, ReducerType, CommentType, ThreadType, ReplyType, CommentToDeleteType } from "../TypesAndInterfaces";
+import { DataContextType, StateType, ActionType, DataType, ReducerType, ThreadType, ReplyType, CommentToDeleteType } from "../TypesAndInterfaces";
 import generateID from "../utils/generateID";
 
 
@@ -11,7 +12,7 @@ export const DataContext = createContext<DataContextType|null>(null);
 const initState:StateType = {isLoaded: false};
 
 
-const reducer:ReducerType = (state:StateType, action:ActionType) => {
+const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
 
     switch (action.type) {
         case 'set-data':
@@ -19,24 +20,52 @@ const reducer:ReducerType = (state:StateType, action:ActionType) => {
                 isLoaded: true,
                 data: action.payload
             };
-       
+
         case 'add-thread':
             if(!state.isLoaded)
                 return state;
             {
                 const newThreads = state.data.comments.slice();
                 newThreads.push(action.payload);
-    
+
                 const newState = {
                     ...state,
                     data: {
                         ...state.data,
                         comments: newThreads
                     }
-                }            
+                }  
+                
 
                 return newState;
-            }     
+            }
+        
+        case 'add-reply': 
+            if(!state.isLoaded) return state;
+
+            {
+                const newThreads = state.data.comments.slice();
+                
+                const thread = newThreads.find(t => t.id === action.payload.threadID);
+
+                const reply = thread?.replies.find(r => r.content === action.payload.reply.content);
+
+                if(thread === undefined || reply) return state;
+
+                thread.replies.push(action.payload.reply);
+                
+                
+
+                const newState = {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        comments: newThreads
+                    }
+                };
+
+                return newState;
+            }
         
         case 'set-score/thread':
             if(!state.isLoaded)
@@ -185,13 +214,32 @@ const useDataContext: () => DataContextType = () => {
         }
     } 
 
+    function addReply (threadID:string, replyingTo:string, content:string) {
+
+        if(state.isLoaded) {
+            const reply:ReplyType = {
+                id: generateID() + '',
+                replyingTo: replyingTo, 
+                content: content, 
+                createdAt: (new Date()).toUTCString(),
+                score: 0,
+                user: state.data.currentUser
+            }
+
+            dispatch({type: 'add-reply', payload: {threadID: threadID, reply: reply}});
+
+        }
+    }
+
+
     return {
         data: state.isLoaded? state.data : null,
         setData,
         addThread,
         setScore,
         setCommentToDelete,
-        deleteComment
+        deleteComment,
+        addReply
     }
 }
 

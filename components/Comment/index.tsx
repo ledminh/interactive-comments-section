@@ -6,17 +6,19 @@ import Image from "next/image";
 
 
 import { CommentComponent, DataContextType } from "../../TypesAndInterfaces";
-import { FunctionComponent, useContext } from 'react';
+import { FunctionComponent, useContext, useState } from 'react';
 
 import timeConvert from '../../utils/timeConvert';
 import { DataContext } from '../../useDataContext';
 import FunctionButtons from './FunctionButtons';
 import Score from './Score';
+import AddComment from '../AddComment';
 
 
 const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, authorID, createdAt, content, score, replyingTo}) => {
 
     const {data} = useContext(DataContext) as DataContextType;
+    const [showAddComment, setShowAddComment] = useState(false);
 
     return (
         <>
@@ -47,6 +49,8 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                         commentType={type} 
                         threadID={type === 'THREAD'? id : parentID as string}  
                         replyID={id}
+                        setShowAddComment={setShowAddComment}
+
                         />
                 </div>
             </div>
@@ -76,6 +80,7 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                             commentType={type} 
                             threadID={type === 'THREAD'? id : parentID as string}  
                             replyID={id}
+                            setShowAddComment={setShowAddComment}
                             />
                     </div>
 
@@ -85,6 +90,16 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                         />
                 </div>
             </div>
+            {
+                showAddComment? 
+                <AddComment
+                    type='REPLY'
+                    threadID={type === 'THREAD'? id : parentID as string}
+                    replyingTo={authorName}
+                    setShowAddComment={setShowAddComment}
+                /> : null
+            }
+
         </>
     )
 

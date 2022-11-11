@@ -46,7 +46,8 @@ export type DataContextType = {
     addThread: (content:string) => void,
     setScore: ((type:'THREAD'|'REPLY', id:string, score:number, parentID?:string) => void),
     setCommentToDelete: (commentToDelete:CommentToDeleteType) => void,
-    deleteComment: () => void
+    deleteComment: () => void,
+    addReply: (threadID:string, replyingTo:string, content:string) => void
     
 }
 
@@ -64,7 +65,10 @@ export type CommentComponent = FunctionComponent<{ type: 'THREAD'|'REPLY', paren
 
 export type ModalComponent = FunctionComponent<{show:boolean, onClose?: () => void, children:JSX.Element[]|JSX.Element}>;
 
-export type FunctionButtonsType = FunctionComponent<{authorID: string, commentType:'THREAD'|'REPLY', threadID: string, replyID:string}>;
+export type FunctionButtonsType = FunctionComponent<{authorID: string, commentType:'THREAD'|'REPLY', threadID: string, replyID:string, setShowAddComment: (s:boolean) => void}>;
+
+export type AddCommentType = FunctionComponent<{type:'THREAD'}> | FunctionComponent<{type:'REPLY', threadID:string, replyingTo:string, setShowAddComment: (s:boolean) => void}>;
+
 
 /********************
  *  useReducer
@@ -81,6 +85,7 @@ export type ActionType = {type:'set-data', payload: DataType}
 | {type: 'set-score/thread', payload: {id:string, score: number}}
 | {type: 'set-score/reply', payload: {id:string, score: number, parentID: string}}
 | {type: 'delete/thread', payload: {threadID:string}}
-| {type: 'delete/reply', payload: {threadID:string, replyID:string}};
+| {type: 'delete/reply', payload: {threadID:string, replyID:string}}
+| {type: 'add-reply', payload: {threadID: string, reply: ReplyType}};
 
 export type ReducerType = Reducer<StateType, ActionType>;

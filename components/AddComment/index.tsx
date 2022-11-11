@@ -4,23 +4,26 @@ import Image from 'next/image';
 
 import styles from './AddComment.module.scss';
 import { DataContext } from "../../useDataContext";
-import { DataContextType } from "../../TypesAndInterfaces";
+import { AddCommentType, DataContextType } from "../../TypesAndInterfaces";
 
-const AddComment:FunctionComponent = () => {
-
+const AddComment:AddCommentType = ({type, threadID, replyingTo, setShowAddComment}) => {
     
-    const [comment, setComment] = useState("");
-    
-    const {addThread, data} = useContext(DataContext) as DataContextType;
-    
-    
-    
+    const [comment, setComment] = useState('');    
+    const {addThread, addReply, data} = useContext(DataContext) as DataContextType;
     
     const sendHandle = () => {
         if(comment === '') return;
         
         addThread(comment);
         setComment("");
+    }
+
+    const replyHandle = () => {
+        if(comment === '') return;
+        addReply(threadID, replyingTo, comment);
+        setComment("");
+        setShowAddComment(false);
+
     }
 
     return (
@@ -46,8 +49,8 @@ const AddComment:FunctionComponent = () => {
             }
 
             <button className={styles.button}
-                onClick={sendHandle}>           
-                SEND
+                onClick={type === 'THREAD'? sendHandle: replyHandle}>           
+                {type === 'REPLY'? 'REPLY' : 'SEND'}
             </button>
         </div>
     )

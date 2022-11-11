@@ -43,7 +43,9 @@ const Home:NextPage<{dataProps:DataType}> = ({dataProps}) =>{
         {
           data === null? "Loading ...": threadsGenerator(data.comments)
         }
-        <AddComment />
+        <AddComment 
+          type='THREAD' 
+          />
         <Modals/>
       </main>
     </>

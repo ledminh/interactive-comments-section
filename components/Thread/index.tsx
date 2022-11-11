@@ -1,5 +1,6 @@
 import { FunctionComponent } from "react";
 import { ThreadType } from "../../TypesAndInterfaces";
+import AddComment from "../AddComment";
 import Comment from "../Comment";
 
 import styles from './Thread.module.scss';
@@ -26,7 +27,7 @@ const Thread:FunctionComponent<{data:ThreadType}> = ({data}) => {
                     {
                         data.replies.map(Rep => (
                             <Comment 
-                                key={Rep.content}
+                                key={Rep.createdAt + '-' + Rep.id}
                                 type='REPLY'
                                 id={Rep.id}
                                 parentID={data.id}
