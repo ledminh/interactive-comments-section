@@ -67,7 +67,7 @@ export type ModalComponent = FunctionComponent<{show:boolean, onClose?: () => vo
 
 export type FunctionButtonsType = FunctionComponent<{authorID: string, commentType:'THREAD'|'REPLY', threadID: string, replyID:string, setShowAddComment: (s:boolean) => void}>;
 
-export type AddCommentType = FunctionComponent<{type:'THREAD'}> | FunctionComponent<{type:'REPLY', threadID:string, replyingTo:string, setShowAddComment: (s:boolean) => void}>;
+export type AddCommentType = FunctionComponent<{type:'THREAD'}> & FunctionComponent<{type:'REPLY', threadID:string, replyingTo:string, setShowAddComment: (s:boolean) => void}>;
 
 
 /********************
