@@ -20,9 +20,9 @@ const AddComment:AddCommentType = ({type, threadID, replyingTo, setShowAddCommen
 
     const replyHandle = () => {
         if(comment === '') return;
-        addReply(threadID, replyingTo, comment);
+        addReply(threadID as string, replyingTo as string, comment);
         setComment("");
-        setShowAddComment(false);
+        setShowAddComment? setShowAddComment(false): null;
 
     }
 
