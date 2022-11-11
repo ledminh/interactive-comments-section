@@ -17,7 +17,7 @@ import AddComment from '../AddComment';
 
 const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, authorID, createdAt, content, score, replyingTo}) => {
 
-    const {data} = useContext(DataContext) as DataContextType;
+    const {data, setContent} = useContext(DataContext) as DataContextType;
     const [showAddComment, setShowAddComment] = useState(false);
 
     const textArea = useRef<HTMLTextAreaElement>(null);
@@ -30,6 +30,11 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
     }
 
 
+
+    const updateButtonOnClick = () => {
+        setContent(type, id, textAreaValue, parentID);
+        _setShowTextArea(false);
+    }
 
     return (
         <>
@@ -46,12 +51,19 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                 
                 {
                     showTextArea?
-                    <textarea 
-                        className={styles.textArea}
-                        value={textAreaValue}
-                        ref={textArea}
-                        onChange={(e) => setTextAreaValue(e.target.value)}
-                    />: <Content 
+                    <>
+                        <textarea 
+                            className={styles.textArea}
+                            value={textAreaValue}
+                            ref={textArea}
+                            onChange={(e) => setTextAreaValue(e.target.value)}
+                        />
+                        <div className={styles.updateButtonWrapper}>
+                            <button onClick={updateButtonOnClick}>
+                                UPDATE
+                            </button>
+                        </div>
+                    </>: <Content
                             replyingTo={replyingTo}
                             content={content}
                             />
@@ -107,12 +119,19 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                     </div>
                     {
                         showTextArea?
-                        <textarea 
-                            className={styles.textArea}
-                            value={textAreaValue}
-                            ref={textArea}
-                            onChange={(e) => setTextAreaValue(e.target.value)}
-                        />: <Content 
+                        <>
+                            <textarea 
+                                className={styles.textArea}
+                                value={textAreaValue}
+                                ref={textArea}
+                                onChange={(e) => setTextAreaValue(e.target.value)}
+                            />
+                            <div className={styles.updateButtonWrapper}>
+                                <button onClick={updateButtonOnClick}>
+                                    UPDATE
+                                </button>
+                            </div>
+                        </>: <Content
                                 replyingTo={replyingTo}
                                 content={content}
                                 />

@@ -166,6 +166,33 @@
 
 }
 
+.updateButtonWrapper {
+    display: flex;
+    justify-content: flex-end;
+    
+    button {
+        width: 104px;
+        height: 48px;
+
+        background-color: #5357B6;
+        border-radius: 8px;
+        color: white;
+
+        border: none;
+
+        font-weight: 600;
+
+        &:hover {
+            background-color: #C5C6EF;
+        }
+
+        &:active {
+            transition: transform .3s;
+            transform: scale(.95);
+        }
+    }
+}
+
 @media screen and (min-width:720px) {
     .Comment {
         display: none;

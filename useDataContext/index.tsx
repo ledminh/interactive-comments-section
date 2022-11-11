@@ -1,4 +1,5 @@
 import { createContext, useReducer, useState} from "react";
+import { idText } from "typescript";
 import { threadId } from "worker_threads";
 
 import { DataContextType, StateType, ActionType, DataType, ReducerType, ThreadType, ReplyType, CommentToDeleteType } from "../TypesAndInterfaces";
@@ -66,7 +67,57 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
 
                 return newState;
             }
+
+        case 'set-content/thread':
+            if(!state.isLoaded) return state;
+
+            {
+                const newThreads = state.data.comments.slice();
+                const thread = newThreads.find(t => t.id === action.payload.id);
+
+                if(thread === undefined) return state;
+
+                thread.content = action.payload.content;
+
+                const newState = {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        comments: newThreads
+                    }
+                };
+
+                return newState;
+            }
         
+        case 'set-content/reply':
+            if(!state.isLoaded) return state;
+
+            {
+                const newThreads = state.data.comments.slice();
+                const thread = newThreads.find(t => t.id === action.payload.parentID);
+
+                if(thread === undefined) return state;
+
+                const reply = thread.replies.find(r => r.id === action.payload.id);
+
+                if(reply === undefined) return state;
+
+
+                reply.content = action.payload.content;
+
+                const newState = {
+                    ...state,
+                    data: {
+                        ...state.data,
+                        comments: newThreads
+                    }
+                };
+
+                return newState;
+            }
+        
+
         case 'set-score/thread':
             if(!state.isLoaded)
                 return state;
@@ -231,6 +282,15 @@ const useDataContext: () => DataContextType = () => {
         }
     }
 
+    function setContent (type:'THREAD'|'REPLY', id:string, content:string, parentID?:string) {
+        if(type === 'THREAD') {
+            dispatch({type:'set-content/thread', payload:{id:id, content:content}})
+        }
+        else {
+            dispatch({type: 'set-content/reply', payload:{id:id, content:content, parentID: parentID as string}})
+        }
+    }
+
 
     return {
         data: state.isLoaded? state.data : null,
@@ -239,7 +299,8 @@ const useDataContext: () => DataContextType = () => {
         setScore,
         setCommentToDelete,
         deleteComment,
-        addReply
+        addReply,
+        setContent
     }
 }
 
