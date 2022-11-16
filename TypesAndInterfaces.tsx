@@ -85,7 +85,6 @@ export type ActionType = {type:'set-data', payload: DataType}
 | {type: 'set-score/reply', payload: {id:string, score: number, parentID: string}}
 | {type: 'delete/thread', payload: {threadID:string}}
 | {type: 'delete/reply', payload: {threadID:string, replyID:string}}
-| {type: 'add-reply', payload: {threadID: string, reply: ReplyType}}
 | {type: 'set-content/thread', payload: {id: string, content: string}}
 | {type: 'set-content/reply', payload: {id:string, content:string, parentID:string}};
 

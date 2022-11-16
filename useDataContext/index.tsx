@@ -22,35 +22,7 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
                 isLoaded: true,
                 data: action.payload
             };
-
-
-        case 'add-reply': 
-            if(!state.isLoaded) return state;
-
-            {
-                const newThreads = state.data.comments.slice();
-                
-                const thread = newThreads.find(t => t.id === action.payload.threadID);
-
-                const reply = thread?.replies.find(r => r.content === action.payload.reply.content);
-
-                if(thread === undefined || reply) return state;
-
-                thread.replies.push(action.payload.reply);
-                
-                
-
-                const newState = {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        comments: newThreads
-                    }
-                };
-
-                return newState;
-            }
-
+        
         case 'set-content/thread':
             if(!state.isLoaded) return state;
 
@@ -248,17 +220,25 @@ const useDataContext: () => DataContextType = () => {
 
     function addReply (threadID:string, replyingTo:string, content:string) {
 
-        if(state.isLoaded) {
-            const reply:ReplyType = {
-                id: generateID() + '',
-                replyingTo: replyingTo, 
+        if(state.isLoaded) {        
+
+            const replyToDatabase = {
                 content: content, 
                 createdAt: (new Date()).toUTCString(),
-                score: 0,
-                user: state.data.currentUser
+                parentThreadID: threadID,            
+                userID: state.data.currentUser.id,
+                replyingTo: replyingTo
             }
-
-            dispatch({type: 'add-reply', payload: {threadID: threadID, reply: reply}});
+                        
+            fetch("/api/add-reply",
+            {
+                method: "POST",
+                body: JSON.stringify(replyToDatabase)
+            })
+            .then(res => res.json())
+            .then(()  => router.reload());
+            
+            
 
         }
     }

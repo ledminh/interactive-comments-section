@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext, useState } from "react";
+import { useContext, useState } from "react";
 
 import Image from 'next/image';
 
