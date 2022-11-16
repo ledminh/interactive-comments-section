@@ -22,7 +22,6 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
                 isLoaded: true,
                 data: action.payload
             };
-        
         case 'set-content/thread':
             if(!state.isLoaded) return state;
 
