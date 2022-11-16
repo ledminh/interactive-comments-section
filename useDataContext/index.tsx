@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { createContext, useReducer, useState} from "react";
 import { idText } from "typescript";
 import { threadId } from "worker_threads";
@@ -22,25 +23,6 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
                 data: action.payload
             };
 
-        case 'add-thread':
-            if(!state.isLoaded)
-                return state;
-            {
-                const newThreads = state.data.comments.slice();
-                newThreads.push(action.payload);
-
-                const newState = {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        comments: newThreads
-                    }
-                }  
-                
-
-                return newState;
-            }
-        
         case 'add-reply': 
             if(!state.isLoaded) return state;
 
@@ -214,6 +196,7 @@ const useDataContext: () => DataContextType = () => {
 
     const [commentToDelete, setCommentToDelete] = useState<CommentToDeleteType|null>(null);
     
+    const router = useRouter();
 
     /*********************************************************/
 
@@ -224,21 +207,18 @@ const useDataContext: () => DataContextType = () => {
 
     const addThread = (content:string) => {
         if(state.isLoaded) {
-            const thread:ThreadType = {
-                id: generateID() + '', 
+            const threadToDatabase = {
                 content: content, 
-                createdAt: (new Date()).toUTCString(), 
-                score: 0, 
-                user: state.data.currentUser,
-                replies: []
-            }
-
-            dispatch({
-                type: 'add-thread',
-                payload:thread
+                createdAt: (new Date()).toUTCString(),
+                userID: state.data.currentUser.id            }
+            
+            fetch("/api/add-thread",
+            {
+                method: "POST",
+                body: JSON.stringify(threadToDatabase)
             })
-        
-        
+            .then(res => res.json())
+            .then(()  => router.reload())
         }
     }
     
