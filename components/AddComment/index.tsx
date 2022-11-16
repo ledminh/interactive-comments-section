@@ -11,6 +11,7 @@ const AddComment:AddCommentType = ({type, threadID, replyingTo, setShowAddCommen
     const [comment, setComment] = useState('');    
     const {addThread, addReply, data} = useContext(DataContext) as DataContextType;
     
+    
     const sendHandle = () => {
         if(comment === '') return;
         

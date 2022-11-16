@@ -17,6 +17,7 @@ const initState:StateType = {isLoaded: false};
 const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
 
     switch (action.type) {
+        
         case 'set-data':
             return {
                 isLoaded: true,
@@ -177,6 +178,7 @@ const useDataContext: () => DataContextType = () => {
         payload: data
     });
 
+
     const addThread = (content:string) => {
         if(state.isLoaded) {
             const threadToDatabase = {
@@ -210,7 +212,19 @@ const useDataContext: () => DataContextType = () => {
         if(!state.isLoaded || commentToDelete === null) return;
 
         if(commentToDelete.commentType === 'THREAD'){
-            dispatch({type:'delete/thread', payload:{threadID:commentToDelete.threadID}});
+            
+            fetch("/api/delete-thread",
+            {
+                method: "POST",
+                body: JSON.stringify({
+                    threadID: commentToDelete.threadID
+                })
+            })
+            .then(()  => router.reload())
+            
+
+
+            
         }
         else {
             dispatch({type:'delete/reply', payload:{threadID:commentToDelete.threadID, replyID:commentToDelete.replyID as string}})

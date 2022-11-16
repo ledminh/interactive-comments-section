@@ -1,34 +1,57 @@
 import { NextPage } from "next";
 import Head from "next/head"
-import favicon from '../assets/images/favicon-32x32.png';
+import favicon from '../../assets/images/favicon-32x32.png';
 
 import { GetServerSideProps } from "next";
 
-import Thread from "../components/Thread";
-import AddComment from "../components/AddComment";
+import Thread from "../../components/Thread";
+import AddComment from "../../components/AddComment";
 
 // import dataJSON from '../data.json';
-import clientPromise from '../utils/mongodb';
+import clientPromise from '../../utils/mongodb';
 
 
-import { DataContextType, DataType, ThreadType, CommentType, ReplyType } from "../TypesAndInterfaces";
+import { DataContextType, ThreadType, ReplyType } from "../../TypesAndInterfaces";
 
-import styles from '../styles/Home.module.scss';
+import styles from '../../styles/Home.module.scss';
 import { useContext, useEffect } from "react";
-import { DataContext } from "../useDataContext";
-import Modals from "../components/Modal";
+import { DataContext } from "../../useDataContext";
+import Modals from "../../components/Modal";
 
-import { UserInfo } from "../TypesAndInterfaces";
+import { UserInfo } from "../../TypesAndInterfaces";
 
+import { useRouter } from "next/router";
 
-const Home:NextPage<{dataProps:DataType}> = ({dataProps}) =>{
+const Home:NextPage<{threads:ThreadType[]}> = ({threads}) =>{
 
   const {data, setData} = useContext(DataContext) as DataContextType;
   
+  const router = useRouter();
+  const { username } = router.query;
+  
+
   useEffect(() => {
-    setData(dataProps);
+    fetch('/api/get-user',
+    {
+      method: "POST",
+      body: JSON.stringify({
+          username: username
+      })
+    })
+    .then(res =>  res.json())
+    .then(data => {
+
+      setData({
+        comments: threads,
+        currentUser: data.currentUser
+      })
+    });
+
+    
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataProps]);
+  }, []);
+
+
 
   return (
     <>
@@ -40,12 +63,17 @@ const Home:NextPage<{dataProps:DataType}> = ({dataProps}) =>{
       </Head>
       <main className={styles.main}>
         {
-          data === null? "Loading ...": threadsGenerator(data.comments)
+          data === null? 
+            "Loading ..."
+            :
+            <>
+              {threadsGenerator(data.comments)}
+              <AddComment 
+                type='THREAD' 
+                />
+              <Modals/>
+            </> 
         }
-        <AddComment 
-          type='THREAD' 
-          />
-        <Modals/>
       </main>
     </>
   )
@@ -54,7 +82,7 @@ const Home:NextPage<{dataProps:DataType}> = ({dataProps}) =>{
 export default Home;
 
 
-export const getServerSideProps:GetServerSideProps<{dataProps:DataType}> = async () => {
+export const getServerSideProps:GetServerSideProps<{threads:ThreadType[]}> = async () => {
     /************************************** */ 
     //Setup data
     const client = await clientPromise;
@@ -133,17 +161,7 @@ export const getServerSideProps:GetServerSideProps<{dataProps:DataType}> = async
 
 
     return {
-        props: { dataProps: JSON.parse(JSON.stringify({
-          comments: threads,
-          currentUser: {
-            id: '636969580c2f2107e31bf931',
-            "image": { 
-              "png": "./images/avatars/image-juliusomo.png",
-              "webp": "./images/avatars/image-juliusomo.webp"
-            },
-            "username": "juliusomo"
-          }
-        }))},
+        props: { threads: JSON.parse(JSON.stringify(threads))},
     };
 }
 
