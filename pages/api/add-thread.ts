@@ -36,7 +36,8 @@ export default async function handler(
         type: 'THREAD',
         content: data.content,
         createdAt: data.createdAt,
-        score: 0,
+        upvotes: [],
+        downvotes: [],
         authorID: data.userID,
         replyIDs: []
     });  

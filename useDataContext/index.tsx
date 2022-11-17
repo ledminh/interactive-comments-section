@@ -238,20 +238,14 @@ const useDataContext: () => DataContextType = () => {
                     type:'set-content/thread', 
                     payload:{id:id, content:content}
                     })
-                
             }
             else {
                 dispatch({
                     type: 'set-content/reply', 
                     payload:{id:id, content:content, parentID: parentID as string}})
             }
-
-
         });
-        
-        
     }
-
 
     return {
         data: state.isLoaded? state.data : null,

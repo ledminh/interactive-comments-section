@@ -19,6 +19,8 @@ export type CommentType = {
     createdAt: string,
     score: number,
     user: UserInfo,
+    upvotes: string[],
+    downvotes: string[]
 };
 
 export interface ReplyType extends CommentType {

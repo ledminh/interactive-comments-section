@@ -43,7 +43,8 @@ export default async function handler(
         type: 'REPLY',
         content: data.content,
         createdAt: data.createdAt,
-        score: 0,
+        upvotes: [],
+        downvotes: [],
         replyingToID: originalUser?._id.toString(), 
         authorID: data.userID
     });  

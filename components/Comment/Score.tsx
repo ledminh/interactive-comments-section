@@ -15,13 +15,14 @@ const Score:ScoreType = ({type, id, parentID, score}) => {
 
     return (
         <div className={styles.score}>
-            <Button type="PLUS"
+            <Button type="UPVOTE"
                 onClick={() => {
+                    
                     setScore(type, id, score + 1, parentID);
                 }}
             />
             <span>{score}</span>
-            <Button type="MINUS"
+            <Button type="DOWNVOTE"
                 onClick={() => {
                     if(score === 0) return;
                     
@@ -36,7 +37,7 @@ export default Score;
 
 /**************************************/
 
-type PlusMinusButtonType = FunctionComponent<{type:"PLUS"|"MINUS", onClick: () => void}>; 
+type PlusMinusButtonType = FunctionComponent<{type:"UPVOTE"|"DOWNVOTE", onClick: () => void}>; 
 
 const Button:PlusMinusButtonType = ({type, ...props}) => {
     const [hover, setHover] = useState(false);
@@ -49,7 +50,7 @@ const Button:PlusMinusButtonType = ({type, ...props}) => {
             onMouseLeave={() => setHover(false)}
             >
             {
-                type === 'PLUS'? 
+                type === 'UPVOTE'? 
                     <IconPlus
                         fill={hover? '#5357B6' : '#C5C6EF'}
                     /> : 

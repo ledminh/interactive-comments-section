@@ -125,8 +125,10 @@ export const getServerSideProps:GetServerSideProps<{threads:ThreadType[]}> = asy
           content: com.content,
           createdAt: com.createdAt,
           replyingTo: usersObj[com.replyingToID].username,
-          score: com.score,
-          user: usersObj[com.authorID]
+          score: com.upvotes.length - com.downvotes.length,
+          user: usersObj[com.authorID],
+          upvotes: com.upvotes,
+          downvotes: com.downvotes
         }
       }
 
@@ -143,10 +145,13 @@ export const getServerSideProps:GetServerSideProps<{threads:ThreadType[]}> = asy
           id: comment._id.toString(),
           content: comment.content,
           createdAt: comment.createdAt,
-          score: comment.score,
+          score: comment.upvotes.length - comment.downvotes.length,
           user: usersObj[comment.authorID],
           
-          replies: (comment.replyIDs as string[]).filter(id => id !== '').map(id => repliesObj[id])
+          replies: (comment.replyIDs as string[]).filter(id => id !== '').map(id => repliesObj[id]),
+
+          upvotes: comment.upvotes,
+          downvotes: comment.downvotes
           
         
         }
