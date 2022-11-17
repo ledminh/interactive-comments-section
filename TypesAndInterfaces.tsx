@@ -83,7 +83,6 @@ export type StateType = {isLoaded: false}
 export type ActionType = {type:'set-data', payload: DataType}
 | {type: 'set-score/thread', payload: {id:string, score: number}}
 | {type: 'set-score/reply', payload: {id:string, score: number, parentID: string}}
-| {type: 'delete/reply', payload: {threadID:string, replyID:string}}
 | {type: 'set-content/thread', payload: {id: string, content: string}}
 | {type: 'set-content/reply', payload: {id:string, content:string, parentID:string}};
 

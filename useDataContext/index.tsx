@@ -117,30 +117,6 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
                 return newState;
             }
         
-
-
-        case 'delete/reply':
-            if(!state.isLoaded) return state;
-
-            {
-                const newThreads = state.data.comments.slice();
-
-                const thread  = newThreads.find(t => t.id === action.payload.threadID);
-
-                if(thread !== undefined){
-                    thread.replies = thread.replies.filter(r => r.id !== action.payload.replyID);
-                    return {
-                        ...state,
-                        data: {
-                            ...state.data,
-                            comments: newThreads
-                        }
-                    }
-                }
-
-                return state
-            }
-        
         default:
             throw new Error();
     }
@@ -204,11 +180,7 @@ const useDataContext: () => DataContextType = () => {
                     threadID: commentToDelete.threadID
                 })
             })
-            .then(()  => router.reload())
-            
-
-
-            
+            .then(()  => router.reload())         
         }
         else {
             fetch("/api/delete-reply",
@@ -220,7 +192,6 @@ const useDataContext: () => DataContextType = () => {
                 })
             })
             .then(()  => router.reload())
-
         }
     } 
 
@@ -235,7 +206,7 @@ const useDataContext: () => DataContextType = () => {
                 userID: state.data.currentUser.id,
                 replyingTo: replyingTo
             }
-                        
+
             fetch("/api/add-reply",
             {
                 method: "POST",
@@ -250,12 +221,35 @@ const useDataContext: () => DataContextType = () => {
     }
 
     function setContent (type:'THREAD'|'REPLY', id:string, content:string, parentID?:string) {
-        if(type === 'THREAD') {
-            dispatch({type:'set-content/thread', payload:{id:id, content:content}})
+        
+        const reqData = {
+            id: id,
+            content: content
         }
-        else {
-            dispatch({type: 'set-content/reply', payload:{id:id, content:content, parentID: parentID as string}})
-        }
+        
+        fetch("/api/set-content",
+        {
+            method: "POST",
+            body: JSON.stringify(reqData)
+        })
+        .then(() =>  {
+            if(type === 'THREAD') {
+                dispatch({
+                    type:'set-content/thread', 
+                    payload:{id:id, content:content}
+                    })
+                
+            }
+            else {
+                dispatch({
+                    type: 'set-content/reply', 
+                    payload:{id:id, content:content, parentID: parentID as string}})
+            }
+
+
+        });
+        
+        
     }
 
 
