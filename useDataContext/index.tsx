@@ -1,10 +1,7 @@
 import { useRouter } from "next/router";
 import { createContext, useReducer, useState} from "react";
-import { idText } from "typescript";
-import { threadId } from "worker_threads";
 
-import { DataContextType, StateType, ActionType, DataType, ReducerType, ThreadType, ReplyType, CommentToDeleteType } from "../TypesAndInterfaces";
-import generateID from "../utils/generateID";
+import { DataContextType, StateType, ActionType, DataType, ReducerType, CommentToDeleteType } from "../TypesAndInterfaces";
 
 
 

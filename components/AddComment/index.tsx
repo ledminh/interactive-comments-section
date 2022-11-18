@@ -31,7 +31,7 @@ const AddComment:AddCommentType = ({type, threadID, replyingTo, setShowAddCommen
         <div className={styles.AddComment}>
             <textarea 
                 className={styles.textArea}
-                placeholder="Add a comment ..."
+                placeholder={type === 'THREAD'? "Add a comment ..." : 'Add a reply ...'}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
             />

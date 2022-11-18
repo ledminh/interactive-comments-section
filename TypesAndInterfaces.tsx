@@ -66,7 +66,7 @@ export type CommentComponent = FunctionComponent<{ type: 'THREAD'|'REPLY', paren
 
 export type ModalComponent = FunctionComponent<{show:boolean, onClose?: () => void, children:JSX.Element[]|JSX.Element}>;
 
-export type FunctionButtonsType = FunctionComponent<{authorID: string, commentType:'THREAD'|'REPLY', threadID: string, replyID:string, setShowAddComment: (s:boolean) => void, setShowTextArea: (s:boolean) => void}>;
+export type FunctionButtonsType = FunctionComponent<{authorID: string, commentType:'THREAD'|'REPLY', threadID: string, replyID:string, setShowAddComment: (s:boolean) => void, showAddComment:boolean, setShowTextArea: (s:boolean) => void}>;
 
 export type AddCommentType = FunctionComponent<{type:'THREAD'|'REPLY', threadID?:string, replyingTo?:string, setShowAddComment?: (s:boolean) => void}>;
 

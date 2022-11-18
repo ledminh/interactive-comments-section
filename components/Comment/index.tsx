@@ -84,6 +84,7 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                         threadID={type === 'THREAD'? id : parentID as string}  
                         replyID={id}
                         setShowAddComment={setShowAddComment}
+                        showAddComment={showAddComment}
                         setShowTextArea={setShowTextArea}
                         />
                 </div>
@@ -117,6 +118,7 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                             threadID={type === 'THREAD'? id : parentID as string}  
                             replyID={id}
                             setShowAddComment={setShowAddComment}
+                            showAddComment={showAddComment}
                             setShowTextArea={setShowTextArea}
                             />
                             
