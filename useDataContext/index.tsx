@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { createContext, useReducer, useState} from "react";
 
 import { DataContextType, StateType, ActionType, DataType, ReducerType, CommentToDeleteType } from "../TypesAndInterfaces";
@@ -14,12 +13,15 @@ const initState:StateType = {isLoaded: false};
 const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
 
     switch (action.type) {
-        
         case 'set-data':
             return {
                 isLoaded: true,
                 data: action.payload
             };
+        
+        case 'reset': 
+            return initState;
+
         case 'set-content/thread':
             if(!state.isLoaded) return state;
 
@@ -67,8 +69,7 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
                 };
 
                 return newState;
-            }
-        
+            }     
 
         case 'vote' :
             if(!state.isLoaded) return state;
@@ -127,6 +128,7 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
                     }
                 };
             }
+
         default:
             throw new Error();
     }
@@ -139,7 +141,6 @@ const useDataContext: () => DataContextType = () => {
 
     const [commentToDelete, setCommentToDelete] = useState<CommentToDeleteType|null>(null);
     
-    const router = useRouter();
 
     /*********************************************************/
 
@@ -162,12 +163,34 @@ const useDataContext: () => DataContextType = () => {
                 body: JSON.stringify(threadToDatabase)
             })
             .then(res => res.json())
-            .then(()  => router.reload())
+            .then(()  => reset())
         }
     }
     
-    
+    function addReply (threadID:string, replyingTo:string, content:string) {
 
+        if(state.isLoaded) {        
+
+            const replyToDatabase = {
+                content: content, 
+                createdAt: (new Date()).toUTCString(),
+                parentThreadID: threadID,            
+                userID: state.data.currentUser.id,
+                replyingTo: replyingTo
+            }
+
+            fetch("/api/add-reply",
+            {
+                method: "POST",
+                body: JSON.stringify(replyToDatabase)
+            })
+            .then(res => res.json())
+            .then(()  => reset());
+            
+            
+
+        }
+    }
 
     function vote(voteType: 'UPVOTE' | 'DOWNVOTE', commentType: 'THREAD' | 'REPLY', id:string, parentID?:string) {
         if(!state.isLoaded) return;
@@ -209,7 +232,7 @@ const useDataContext: () => DataContextType = () => {
                     threadID: commentToDelete.threadID
                 })
             })
-            .then(()  => router.reload())         
+            .then(()  => reset())         
         }
         else {
             fetch("/api/delete-reply",
@@ -220,34 +243,9 @@ const useDataContext: () => DataContextType = () => {
                     replyID:commentToDelete.replyID as string
                 })
             })
-            .then(()  => router.reload())
+            .then(()  => reset())
         }
     } 
-
-    function addReply (threadID:string, replyingTo:string, content:string) {
-
-        if(state.isLoaded) {        
-
-            const replyToDatabase = {
-                content: content, 
-                createdAt: (new Date()).toUTCString(),
-                parentThreadID: threadID,            
-                userID: state.data.currentUser.id,
-                replyingTo: replyingTo
-            }
-
-            fetch("/api/add-reply",
-            {
-                method: "POST",
-                body: JSON.stringify(replyToDatabase)
-            })
-            .then(res => res.json())
-            .then(()  => router.reload());
-            
-            
-
-        }
-    }
 
     function setContent (type:'THREAD'|'REPLY', id:string, content:string, parentID?:string) {
         
@@ -276,9 +274,12 @@ const useDataContext: () => DataContextType = () => {
         });
     }
 
+    const reset = () => dispatch({type: 'reset'});
+
     return {
         data: state.isLoaded? state.data : null,
         setData,
+        reset,
         addThread,
         vote,
         setCommentToDelete,

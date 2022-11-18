@@ -23,12 +23,19 @@ import { UserInfo } from "../TypesAndInterfaces";
 
 const Home:NextPage<{dataProps:DataType}> = ({dataProps}) =>{
 
-  const {data, setData} = useContext(DataContext) as DataContextType;
+  const {data, setData, reset} = useContext(DataContext) as DataContextType;
   
+
   useEffect(() => {
-    setData(dataProps);
+    if(data === null){
+      fetch('/api/load-data')
+        .then(res => res.json())
+        .then(dataProps => setData(dataProps))
+    }
+    
+    
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataProps]);
+  }, [data]);
 
   return (
     <>
@@ -55,7 +62,27 @@ export default Home;
 
 
 export const getServerSideProps:GetServerSideProps<{dataProps:DataType}> = async () => {
-    /************************************** */ 
+    
+
+    const dataProps = await loadData();
+
+    return {
+        props: { dataProps: JSON.parse(JSON.stringify(dataProps))},
+    };
+}
+
+
+/*****************************************/
+
+const threadsGenerator = (threads:ThreadType[]) => threads.map((thread) => (
+  <Thread 
+    key={thread.content}
+    threadData={thread}/>
+))
+
+
+const loadData = async () => {
+/************************************** */ 
     //Setup data
     const client = await clientPromise;
     const db = client.db("interactive-comment-section");
@@ -132,28 +159,15 @@ export const getServerSideProps:GetServerSideProps<{dataProps:DataType}> = async
       
     );
 
-
-
     return {
-        props: { dataProps: JSON.parse(JSON.stringify({
-          comments: threads,
-          currentUser: {
-            id: '636969580c2f2107e31bf931',
-            "image": { 
-              "png": "./images/avatars/image-juliusomo.png",
-              "webp": "./images/avatars/image-juliusomo.webp"
-            },
-            "username": "juliusomo"
-          }
-        }))},
-    };
+      comments: threads,
+      currentUser: {
+        id: '636969580c2f2107e31bf931',
+        "image": { 
+          "png": "./images/avatars/image-juliusomo.png",
+          "webp": "./images/avatars/image-juliusomo.webp"
+        },
+        "username": "juliusomo"
+      }
+    }
 }
-
-
-/*****************************************/
-
-const threadsGenerator = (threads:ThreadType[]) => threads.map((thread) => (
-  <Thread 
-    key={thread.content}
-    threadData={thread}/>
-))
