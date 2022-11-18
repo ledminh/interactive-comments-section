@@ -15,7 +15,7 @@ import Score from './Score';
 import AddComment from '../AddComment';
 
 
-const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, authorID, createdAt, content, score, replyingTo}) => {
+const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, authorID, createdAt, content, score, upvote, downvote, replyingTo}) => {
 
     const {data, setContent} = useContext(DataContext) as DataContextType;
     const [showAddComment, setShowAddComment] = useState(false);
@@ -74,7 +74,9 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                         type={type} 
                         id={id} 
                         parentID={parentID} 
-                        score={score} 
+                        score={score}
+                        upvote={upvote}
+                        downvote={downvote}
                         />
                     <FunctionButtons 
                         authorID={authorID}
@@ -95,7 +97,9 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                         type={type} 
                         id={id} 
                         parentID={parentID} 
-                        score={score} 
+                        score={score}
+                        upvote={upvote}
+                        downvote={downvote} 
                         />
                 </div>
                 <div className={styles.main}>

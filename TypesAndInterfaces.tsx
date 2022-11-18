@@ -17,7 +17,6 @@ export type CommentType = {
     id: string,
     content: string,
     createdAt: string,
-    score: number,
     user: UserInfo,
     upvotes: string[],
     downvotes: string[]
@@ -46,7 +45,7 @@ export type DataContextType = {
     data: DataType | null,
     setData: (data:DataType) => void| null,
     addThread: (content:string) => void,
-    setScore: ((type:'THREAD'|'REPLY', id:string, score:number, parentID?:string) => void),
+    vote: (voteType: 'UPVOTE' | 'DOWNVOTE', commentType: 'THREAD' | 'REPLY', id:string, parentID?:string) => void,
     setCommentToDelete: (commentToDelete:CommentToDeleteType) => void,
     deleteComment: () => void,
     addReply: (threadID:string, replyingTo:string, content:string) => void,
@@ -63,7 +62,7 @@ export type CommentToDeleteType = {
 /***********************************
  * Function/Component interfaces
  */
-export type CommentComponent = FunctionComponent<{ type: 'THREAD'|'REPLY', parentID?:string, id:string, avatarURL: string,authorName: string, authorID:string, createdAt: string, content: string, score: number, replyingTo?: string }>;
+export type CommentComponent = FunctionComponent<{ type: 'THREAD'|'REPLY', parentID?:string, id:string, avatarURL: string,authorName: string, authorID:string, createdAt: string, content: string, score: number, upvote: boolean, downvote: boolean, replyingTo?: string }>;
 
 export type ModalComponent = FunctionComponent<{show:boolean, onClose?: () => void, children:JSX.Element[]|JSX.Element}>;
 
@@ -83,9 +82,8 @@ export type StateType = {isLoaded: false}
 }
 
 export type ActionType = {type:'set-data', payload: DataType}
-| {type: 'set-score/thread', payload: {id:string, score: number}}
-| {type: 'set-score/reply', payload: {id:string, score: number, parentID: string}}
 | {type: 'set-content/thread', payload: {id: string, content: string}}
-| {type: 'set-content/reply', payload: {id:string, content:string, parentID:string}};
+| {type: 'set-content/reply', payload: {id:string, content:string, parentID:string}}
+| {type: 'vote', payload: {voteType: 'UPVOTE' | 'DOWNVOTE', commentType: 'THREAD' | 'REPLY', id:string, parentID?:string }};
 
 export type ReducerType = Reducer<StateType, ActionType>;

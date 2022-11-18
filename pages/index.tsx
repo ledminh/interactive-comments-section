@@ -97,7 +97,6 @@ export const getServerSideProps:GetServerSideProps<{dataProps:DataType}> = async
           content: com.content,
           createdAt: com.createdAt,
           replyingTo: usersObj[com.replyingToID].username,
-          score: com.upvotes.length - com.downvotes.length,
           user: usersObj[com.authorID],
           upvotes: com.upvotes,
           downvotes: com.downvotes
@@ -117,7 +116,7 @@ export const getServerSideProps:GetServerSideProps<{dataProps:DataType}> = async
           id: comment._id.toString(),
           content: comment.content,
           createdAt: comment.createdAt,
-          score: comment.upvotes.length - comment.downvotes.length,
+          
           user: usersObj[comment.authorID],
           
           replies: (comment.replyIDs as string[]).filter(id => id !== '').map(id => repliesObj[id]),
@@ -156,5 +155,5 @@ export const getServerSideProps:GetServerSideProps<{dataProps:DataType}> = async
 const threadsGenerator = (threads:ThreadType[]) => threads.map((thread) => (
   <Thread 
     key={thread.content}
-    data={thread}/>
+    threadData={thread}/>
 ))

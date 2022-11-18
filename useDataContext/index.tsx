@@ -73,50 +73,63 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
             }
         
 
-        case 'set-score/thread':
-            if(!state.isLoaded)
-                return state;
+        case 'vote' :
+            if(!state.isLoaded) return state;
+            
             {
                 const newThreads = state.data.comments.slice();
-    
-                const thread = newThreads.find(t => t.id === action.payload.id);
-                
-                (thread as ThreadType).score = action.payload.score;
 
-                const newState = {
+                
+
+                if(action.payload.commentType === 'THREAD') {
+                    const thread = newThreads.find(t => t.id === action.payload.id);
+
+                    if(thread === undefined) return state;
+                    
+                    if(action.payload.voteType === 'UPVOTE') {
+                        if(!thread.upvotes.includes(state.data.currentUser.id)){
+                            thread.upvotes.push(state.data.currentUser.id);
+                            thread.downvotes = thread.downvotes.filter(id => id !== state.data.currentUser.id);
+                        }
+                    }
+                    else {
+                        if(!thread.downvotes.includes(state.data.currentUser.id)) {
+                            thread.downvotes.push(state.data.currentUser.id);
+                            thread.upvotes = thread.upvotes.filter(id => id !== state.data.currentUser.id);
+                        }
+                    }
+                }
+                else {
+                    const thread = newThreads.find(t => t.id === action.payload.parentID);
+
+                    if(thread === undefined) return state;
+
+                    const reply = thread.replies.find(rep => rep.id === action.payload.id);
+
+                    if(reply === undefined) return state;
+
+                    if(action.payload.voteType === 'UPVOTE') {
+                        if(!reply.upvotes.includes(state.data.currentUser.id)){
+                            reply.upvotes.push(state.data.currentUser.id);
+                            reply.downvotes = reply.downvotes.filter(id => id !== state.data.currentUser.id);
+                        }
+                    }
+                    else {
+                        if(!reply.downvotes.includes(state.data.currentUser.id)){
+                            reply.downvotes.push(state.data.currentUser.id);
+                            reply.upvotes = reply.downvotes.filter(id => id !== state.data.currentUser.id);
+                        }
+                    }
+                }
+
+                return {
                     ...state,
                     data: {
                         ...state.data,
                         comments: newThreads
                     }
-                }
-
-                return newState;
+                };
             }
-        
-        case 'set-score/reply':
-            if(!state.isLoaded)
-                return state;
-            {
-                const newThreads = state.data.comments.slice();
-
-                const thread = newThreads.find(t => t.id === action.payload.parentID);
-                
-                const reply = (thread as ThreadType).replies.find(rep => rep.id === action.payload.id);
-                
-                (reply as ReplyType).score = action.payload.score; 
-
-                const newState = {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        comments: newThreads
-                    }
-                }
-
-                return newState;
-            }
-        
         default:
             throw new Error();
     }
@@ -157,16 +170,35 @@ const useDataContext: () => DataContextType = () => {
     }
     
     
-    function setScore (type:'THREAD'|'REPLY', id:string, score:number, parentID?:string):void {
-        if(!state.isLoaded) return;
-        
-        if(type === 'THREAD')
-            dispatch({type:'set-score/thread', payload:{id:id, score: score}})
-        else {
-            dispatch({type:'set-score/reply', payload:{id:id, score: score, parentID:parentID as string}})
-        }
-    }
 
+
+    function vote(voteType: 'UPVOTE' | 'DOWNVOTE', commentType: 'THREAD' | 'REPLY', id:string, parentID?:string) {
+        if(!state.isLoaded) return;
+
+        fetch('/api/vote',
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    voteType: voteType,
+                    id: id,
+                    userID: state.data.currentUser.id
+                })
+            }
+        ).then(res => res.json())
+        .then(() => {
+            dispatch({
+                type: 'vote',
+                payload: {
+                    voteType: voteType,
+                    commentType: commentType,
+                    id: id,
+                    parentID: parentID
+                }
+            })
+        });
+            
+
+    }
     
     function deleteComment () {
         if(!state.isLoaded || commentToDelete === null) return;
@@ -251,7 +283,7 @@ const useDataContext: () => DataContextType = () => {
         data: state.isLoaded? state.data : null,
         setData,
         addThread,
-        setScore,
+        vote,
         setCommentToDelete,
         deleteComment,
         addReply,
