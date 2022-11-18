@@ -20,7 +20,6 @@ import Modals from "../../components/Modal";
 
 import { UserInfo } from "../../TypesAndInterfaces";
 
-import { useRouter } from "next/router";
 
 const Home:NextPage<{currentUser:UserInfo}> = ({currentUser}) =>{
 
@@ -28,7 +27,7 @@ const Home:NextPage<{currentUser:UserInfo}> = ({currentUser}) =>{
     
   useEffect(() => {
     if(data === null) {
-      fetch('/api/load-data')
+      fetch('/api/get-threads')
         .then(res => res.json())
         .then(threads => setData({
               comments: threads,
@@ -37,11 +36,6 @@ const Home:NextPage<{currentUser:UserInfo}> = ({currentUser}) =>{
     }    
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
-
-
-
-
-
 
 
   return (

@@ -27,7 +27,7 @@ const Home:NextPage = () =>{
 
   useEffect(() => {
     if(data === null){
-      fetch('/api/load-data')
+      fetch('/api/get-threads')
         .then(res => res.json())
         .then(threads => setData({
               comments: threads,
