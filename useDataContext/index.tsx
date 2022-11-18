@@ -1,6 +1,6 @@
 import { createContext, useReducer, useState} from "react";
 
-import { DataContextType, StateType, ActionType, DataType, ReducerType, CommentToDeleteType } from "../TypesAndInterfaces";
+import { DataContextType, StateType, ActionType, DataType, ReducerType, CommentToDeleteType, UserInfo } from "../TypesAndInterfaces";
 
 
 
@@ -18,6 +18,17 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
                 isLoaded: true,
                 data: action.payload
             };
+        
+        case 'set-current-user':
+            if(!state.isLoaded) return state;
+
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    currentUser: action.payload.currentUser
+                }
+            }
         
         case 'reset': 
             return initState;
@@ -275,11 +286,13 @@ const useDataContext: () => DataContextType = () => {
     }
 
     const reset = () => dispatch({type: 'reset'});
+    const setCurrentUser = (currentUser:UserInfo) => dispatch({type: 'set-current-user', payload: {currentUser: currentUser}})
 
     return {
         data: state.isLoaded? state.data : null,
         setData,
         reset,
+        setCurrentUser,
         addThread,
         vote,
         setCommentToDelete,

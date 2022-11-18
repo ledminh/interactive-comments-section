@@ -7,7 +7,7 @@ import clientPromise from '../../utils/mongodb';
 
 type ResData = {
     message: string
-} | DataType
+} | ThreadType[];
 
 export default async function handler(
     req: NextApiRequest,
@@ -19,10 +19,10 @@ export default async function handler(
         return
     }
 
-    const data = await loadData();
+    const threads = await loadData();
     
     
-    res.status(200).json(data);
+    res.status(200).json(threads);
 }
 
 
@@ -100,15 +100,5 @@ const loadData = async () => {
         }
     });
 
-    return {
-        comments: threads,
-        currentUser: {
-            id: '636969580c2f2107e31bf931',
-            "image": { 
-            "png": "./images/avatars/image-juliusomo.png",
-            "webp": "./images/avatars/image-juliusomo.webp"
-            },
-            "username": "juliusomo"
-        }
-    }
+    return threads;
 }

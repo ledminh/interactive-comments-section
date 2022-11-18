@@ -45,6 +45,7 @@ export type DataContextType = {
     data: DataType | null,
     setData: (data:DataType) => void| null,
     reset: () => void,
+    setCurrentUser: (currentUser:UserInfo) => void,
     addThread: (content:string) => void,
     vote: (voteType: 'UPVOTE' | 'DOWNVOTE', commentType: 'THREAD' | 'REPLY', id:string, parentID?:string) => void,
     setCommentToDelete: (commentToDelete:CommentToDeleteType) => void,
@@ -84,6 +85,7 @@ export type StateType = {isLoaded: false}
 
 export type ActionType = {type:'set-data', payload: DataType}
 | {type: 'reset'}
+| {type: 'set-current-user', payload: {currentUser:UserInfo}}
 | {type: 'set-content/thread', payload: {id: string, content: string}}
 | {type: 'set-content/reply', payload: {id:string, content:string, parentID:string}}
 | {type: 'vote', payload: {voteType: 'UPVOTE' | 'DOWNVOTE', commentType: 'THREAD' | 'REPLY', id:string, parentID?:string }};
