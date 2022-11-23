@@ -42,7 +42,7 @@ export type DataType = {
  */
 
 export type DataContextType = {
-    data: DataType | null,
+    state: StateType,
     loadData: () => void,
     reset: () => void,
     setLoading: () => void,

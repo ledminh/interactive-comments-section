@@ -7,10 +7,10 @@ import Comment from "../Comment";
 import styles from './Thread.module.scss';
 
 const Thread:FunctionComponent<{threadData:ThreadType}> = ({threadData}) => {
-    const {data} = useContext(DataContext) as DataContextType;
+    const {state} = useContext(DataContext) as DataContextType;
 
     return (
-        data === null? null :
+        state.loadingState === 'notLoad'? null :
         <div className={styles.Thread}>
             <div className={styles.mainComment}>
                 <Comment 
@@ -22,8 +22,8 @@ const Thread:FunctionComponent<{threadData:ThreadType}> = ({threadData}) => {
                     createdAt={threadData.createdAt}
                     content={threadData.content}
                     score={threadData.upvotes.length - threadData.downvotes.length}
-                    upvote={threadData.upvotes.includes(data.currentUser.id)}
-                    downvote={threadData.downvotes.includes(data.currentUser.id)}
+                    upvote={threadData.upvotes.includes(state.data.currentUser.id)}
+                    downvote={threadData.downvotes.includes(state.data.currentUser.id)}
                 />
             </div>
             {
@@ -42,8 +42,8 @@ const Thread:FunctionComponent<{threadData:ThreadType}> = ({threadData}) => {
                                 createdAt={Rep.createdAt}
                                 content={Rep.content}
                                 score={Rep.upvotes.length - Rep.downvotes.length}
-                                upvote={Rep.upvotes.includes(data.currentUser.id)}
-                                downvote={Rep.downvotes.includes(data.currentUser.id)}
+                                upvote={Rep.upvotes.includes(state.data.currentUser.id)}
+                                downvote={Rep.downvotes.includes(state.data.currentUser.id)}
                                 replyingTo={Rep.replyingTo}
                             />
                         ))

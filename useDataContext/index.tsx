@@ -32,10 +32,10 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
         
         case 'loading' :
             if(state.loadingState === 'notLoad') return state;
-
+            
             return {
+                ...state,
                 loadingState: 'loading',
-                data: state.data
             }
 
         case 'reset': 
@@ -220,6 +220,7 @@ const useDataContext: () => DataContextType = () => {
             userID: state.data.currentUser.id,
             replyingTo: replyingTo
         }
+        setLoading();
 
         fetch("/api/add-reply",
         {
@@ -320,12 +321,16 @@ const useDataContext: () => DataContextType = () => {
     }
 
     const reset = () => dispatch({type: 'reset'});
-    const setLoading = () => dispatch({type: 'loading'});
+    const setLoading = () => {
+        dispatch({type: 'loading'})
+        
+    };
 
+    
     const setCurrentUser = (currentUser:UserInfo) => dispatch({type: 'set-current-user', payload: {currentUser: currentUser}})
 
     return {
-        data: state.loadingState === 'loaded'? state.data : null,
+        state,
         loadData,
         reset,
         setLoading,

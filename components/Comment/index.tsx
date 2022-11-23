@@ -17,7 +17,7 @@ import AddComment from '../AddComment';
 
 const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, authorID, createdAt, content, score, upvote, downvote, replyingTo}) => {
 
-    const {data, setContent} = useContext(DataContext) as DataContextType;
+    const {state, setContent} = useContext(DataContext) as DataContextType;
     const [showAddComment, setShowAddComment] = useState(false);
 
     const textArea = useRef<HTMLTextAreaElement>(null);
@@ -45,7 +45,7 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                         authorName={authorName}
                     />
                     <AuthorName authorName={authorName}/>
-                    <You show={data?.currentUser.id === authorID} />
+                    <You show={state.loadingState !== 'loaded'? false : state.data.currentUser.id === authorID} />
                     <CreatedAt createdAt={createdAt} />
                 </div>
                 
@@ -110,7 +110,7 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                             authorName={authorName}
                         />
                         <AuthorName authorName={authorName}/>
-                        <You show={data?.currentUser.id === authorID} />
+                        <You show={state.loadingState !== 'loaded'? false : state.data.currentUser.id === authorID} />
                         <CreatedAt createdAt={createdAt} />
                         <FunctionButtons 
                             authorID={authorID}

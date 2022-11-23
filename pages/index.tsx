@@ -11,23 +11,31 @@ import AddComment from "../components/AddComment";
 // import clientPromise from '../utils/mongodb';
 
 
-import { DataContextType, DataType, ThreadType, CommentType, ReplyType } from "../TypesAndInterfaces";
+import { DataContextType, ThreadType } from "../TypesAndInterfaces";
 
 import styles from '../styles/Home.module.scss';
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DataContext } from "../useDataContext";
 import Modals from "../components/Modal";
 
+import LoadingScreen from '../components/LoadingScreen';
 
 
 const Home:NextPage = () =>{
 
-  const {data, loadData, setLoading} = useContext(DataContext) as DataContextType;
+  const {state, loadData} = useContext(DataContext) as DataContextType;
+  // const [threads, setThreads] = useState<ThreadType[]|null>(null);
   
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => loadData(), []);
 
+  // useEffect(() => {
+  //   if(state.loadingState === 'loaded') {
+  //     setThreads(state.data.comments);
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [state.loadingState]);
+  
   return (
     <>
       <Head>
@@ -36,15 +44,27 @@ const Home:NextPage = () =>{
         <link rel="icon" type="image/png" sizes="32x32" href={favicon.src}/>
         <title>Frontend Mentor | Interactive comments section</title>
       </Head>
-      <main className={styles.main}>
-        {
-          data === null? "Loading ...": threadsGenerator(data.comments)
-        }
-        <AddComment 
-          type='THREAD' 
-          />
-        <Modals/>
-      </main>
+      {
+        state.loadingState === 'notLoad'? 'LOADING ....' :
+        <main className={styles.main}>
+          {
+            state.loadingState === 'loading'?            
+                <LoadingScreen />
+              :null
+          }
+          {
+            state.data.comments.map((thread) => (
+                      <Thread 
+                        key={thread.content}
+                        threadData={thread}/>
+                    ))
+          }
+          <AddComment 
+            type='THREAD' 
+            />
+          <Modals/>
+        </main>
+      }
     </>
   )
 }
@@ -53,13 +73,5 @@ export default Home;
 
 
 
-
-/*****************************************/
-
-const threadsGenerator = (threads:ThreadType[]) => threads.map((thread) => (
-  <Thread 
-    key={thread.content}
-    threadData={thread}/>
-))
 
 

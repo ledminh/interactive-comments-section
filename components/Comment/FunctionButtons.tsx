@@ -14,7 +14,7 @@ import { UIContext, uiControlType } from '../../useUIContext';
 
 const FunctionButtons:FunctionButtonsType = ({authorID, commentType, threadID, replyID, setShowAddComment, showAddComment, setShowTextArea}) => {
 
-    const {data, setCommentToDelete} = useContext(DataContext) as DataContextType;
+    const {state, setCommentToDelete} = useContext(DataContext) as DataContextType;
     const {setShowDeleteModal} = useContext(UIContext) as uiControlType;
 
     const deleteHandle = () => {
@@ -36,7 +36,8 @@ const FunctionButtons:FunctionButtonsType = ({authorID, commentType, threadID, r
     return (
         <div className={styles.functions}>
             {
-                data?.currentUser.id === authorID ?
+                state.loadingState === 'notLoad'? null:
+                state.data.currentUser.id === authorID ?
                 <>
                     <FunctionButton type = 'DELETE' onClick={() => deleteHandle()}/>
                     <FunctionButton type = 'EDIT' onClick={editHandle}/>
