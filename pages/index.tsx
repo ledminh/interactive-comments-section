@@ -8,7 +8,7 @@ import Thread from "../components/Thread";
 import AddComment from "../components/AddComment";
 
 // import dataJSON from '../data.json';
-import clientPromise from '../utils/mongodb';
+// import clientPromise from '../utils/mongodb';
 
 
 import { DataContextType, DataType, ThreadType, CommentType, ReplyType } from "../TypesAndInterfaces";
@@ -22,29 +22,11 @@ import Modals from "../components/Modal";
 
 const Home:NextPage = () =>{
 
-  const {data, setData} = useContext(DataContext) as DataContextType;
+  const {data, loadData, setLoading} = useContext(DataContext) as DataContextType;
   
 
-  useEffect(() => {
-    if(data === null){
-      fetch('/api/get-threads')
-        .then(res => res.json())
-        .then(threads => setData({
-              comments: threads,
-              currentUser: {
-                  id: '636969580c2f2107e31bf931',
-                  "image": { 
-                  "png": "./images/avatars/image-juliusomo.png",
-                  "webp": "./images/avatars/image-juliusomo.webp"
-                  },
-                  "username": "juliusomo"
-              }
-          }))
-    }
-    
-    
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  useEffect(() => loadData(), []);
 
   return (
     <>

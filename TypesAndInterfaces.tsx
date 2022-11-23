@@ -43,8 +43,9 @@ export type DataType = {
 
 export type DataContextType = {
     data: DataType | null,
-    setData: (data:DataType) => void| null,
+    loadData: () => void,
     reset: () => void,
+    setLoading: () => void,
     setCurrentUser: (currentUser:UserInfo) => void,
     addThread: (content:string) => void,
     vote: (voteType: 'UPVOTE' | 'DOWNVOTE', commentType: 'THREAD' | 'REPLY', id:string, parentID?:string) => void,
@@ -77,14 +78,15 @@ export type AddCommentType = FunctionComponent<{type:'THREAD'|'REPLY', threadID?
  *  useReducer
  */
  
-export type StateType = {isLoaded: false} 
+export type StateType = {loadingState: 'notLoad'} 
 | {
-    isLoaded: true,
+    loadingState: 'loaded' | 'loading',
     data: DataType
 }
 
 export type ActionType = {type:'set-data', payload: DataType}
 | {type: 'reset'}
+| {type: 'loading'}
 | {type: 'set-current-user', payload: {currentUser:UserInfo}}
 | {type: 'set-content/thread', payload: {id: string, content: string}}
 | {type: 'set-content/reply', payload: {id:string, content:string, parentID:string}}

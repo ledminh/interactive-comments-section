@@ -7,7 +7,7 @@ import { DataContextType, StateType, ActionType, DataType, ReducerType, CommentT
 export const DataContext = createContext<DataContextType|null>(null);
 
 
-const initState:StateType = {isLoaded: false};
+const initState:StateType = {loadingState: 'notLoad'};
 
 
 const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
@@ -15,26 +15,34 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
     switch (action.type) {
         case 'set-data':
             return {
-                isLoaded: true,
+                loadingState: 'loaded',
                 data: action.payload
             };
         
         case 'set-current-user':
-            if(!state.isLoaded) return state;
+            if(state.loadingState !== 'loading') return state;
 
             return {
-                ...state,
+                loadingState: 'loaded',
                 data: {
                     ...state.data,
                     currentUser: action.payload.currentUser
                 }
             }
         
+        case 'loading' :
+            if(state.loadingState === 'notLoad') return state;
+
+            return {
+                loadingState: 'loading',
+                data: state.data
+            }
+
         case 'reset': 
             return initState;
 
         case 'set-content/thread':
-            if(!state.isLoaded) return state;
+            if(state.loadingState !== 'loading') return state;
 
             {
                 const newThreads = state.data.comments.slice();
@@ -44,8 +52,8 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
 
                 thread.content = action.payload.content;
 
-                const newState = {
-                    ...state,
+                const newState:StateType = {
+                    loadingState: 'loaded',
                     data: {
                         ...state.data,
                         comments: newThreads
@@ -56,7 +64,7 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
             }
         
         case 'set-content/reply':
-            if(!state.isLoaded) return state;
+            if(state.loadingState !== 'loading') return state;
 
             {
                 const newThreads = state.data.comments.slice();
@@ -71,8 +79,8 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
 
                 reply.content = action.payload.content;
 
-                const newState = {
-                    ...state,
+                const newState:StateType = {
+                    loadingState: 'loaded',
                     data: {
                         ...state.data,
                         comments: newThreads
@@ -83,7 +91,7 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
             }     
 
         case 'vote' :
-            if(!state.isLoaded) return state;
+            if(state.loadingState !== 'loading') return state;
             
             {
                 const newThreads = state.data.comments.slice();
@@ -132,7 +140,7 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
                 }
 
                 return {
-                    ...state,
+                    loadingState: 'loaded',
                     data: {
                         ...state.data,
                         comments: newThreads
@@ -155,56 +163,78 @@ const useDataContext: () => DataContextType = () => {
 
     /*********************************************************/
 
-    const setData = (data:DataType) => dispatch({
-        type: 'set-data',
-        payload: data
-    });
+    const loadData = () => {
+        fetch('/api/get-threads')
+        .then(res => res.json())
+        .then(threads => {
+            const data = {
+                comments: threads,
+                currentUser: {
+                    id: '636969580c2f2107e31bf931',
+                    "image": { 
+                    "png": "./images/avatars/image-juliusomo.png",
+                    "webp": "./images/avatars/image-juliusomo.webp"
+                    },
+                    "username": "juliusomo"
+                }
+            }
+
+            dispatch({
+                type: 'set-data',
+                payload: data
+            });
+        })
+        .catch(e => console.log(e));
+
+    }
 
 
     const addThread = (content:string) => {
-        if(state.isLoaded) {
-            const threadToDatabase = {
-                content: content, 
-                createdAt: (new Date()).toUTCString(),
-                userID: state.data.currentUser.id            }
-            
-            fetch("/api/add-thread",
-            {
-                method: "POST",
-                body: JSON.stringify(threadToDatabase)
-            })
-            .then(res => res.json())
-            .then(()  => reset())
+        if(state.loadingState === 'notLoad') return; 
+        
+
+
+        const threadToDatabase = {
+            content: content, 
+            createdAt: (new Date()).toUTCString(),
+            userID: state.data.currentUser.id            
         }
+        
+        setLoading();
+
+        fetch("/api/add-thread",
+        {
+            method: "POST",
+            body: JSON.stringify(threadToDatabase)
+        })
+        .then(() => loadData());
     }
     
     function addReply (threadID:string, replyingTo:string, content:string) {
+        if(state.loadingState === 'notLoad') return; 
 
-        if(state.isLoaded) {        
-
-            const replyToDatabase = {
-                content: content, 
-                createdAt: (new Date()).toUTCString(),
-                parentThreadID: threadID,            
-                userID: state.data.currentUser.id,
-                replyingTo: replyingTo
-            }
-
-            fetch("/api/add-reply",
-            {
-                method: "POST",
-                body: JSON.stringify(replyToDatabase)
-            })
-            .then(res => res.json())
-            .then(()  => reset());
-            
-            
-
+        const replyToDatabase = {
+            content: content, 
+            createdAt: (new Date()).toUTCString(),
+            parentThreadID: threadID,            
+            userID: state.data.currentUser.id,
+            replyingTo: replyingTo
         }
+
+        fetch("/api/add-reply",
+        {
+            method: "POST",
+            body: JSON.stringify(replyToDatabase)
+        })
+        .then(() => loadData());
+        
+
     }
 
     function vote(voteType: 'UPVOTE' | 'DOWNVOTE', commentType: 'THREAD' | 'REPLY', id:string, parentID?:string) {
-        if(!state.isLoaded) return;
+        if(state.loadingState === 'notLoad') return; 
+
+        setLoading();
 
         fetch('/api/vote',
             {
@@ -232,7 +262,9 @@ const useDataContext: () => DataContextType = () => {
     }
     
     function deleteComment () {
-        if(!state.isLoaded || commentToDelete === null) return;
+        if(state.loadingState === 'notLoad' || commentToDelete === null) return;
+
+        setLoading();
 
         if(commentToDelete.commentType === 'THREAD'){
             
@@ -243,7 +275,7 @@ const useDataContext: () => DataContextType = () => {
                     threadID: commentToDelete.threadID
                 })
             })
-            .then(()  => reset())         
+            .then(()  => loadData())         
         }
         else {
             fetch("/api/delete-reply",
@@ -254,7 +286,7 @@ const useDataContext: () => DataContextType = () => {
                     replyID:commentToDelete.replyID as string
                 })
             })
-            .then(()  => reset())
+            .then(()  => loadData())
         }
     } 
 
@@ -265,6 +297,8 @@ const useDataContext: () => DataContextType = () => {
             content: content
         }
         
+        setLoading();
+
         fetch("/api/set-content",
         {
             method: "POST",
@@ -286,12 +320,15 @@ const useDataContext: () => DataContextType = () => {
     }
 
     const reset = () => dispatch({type: 'reset'});
+    const setLoading = () => dispatch({type: 'loading'});
+
     const setCurrentUser = (currentUser:UserInfo) => dispatch({type: 'set-current-user', payload: {currentUser: currentUser}})
 
     return {
-        data: state.isLoaded? state.data : null,
-        setData,
+        data: state.loadingState === 'loaded'? state.data : null,
+        loadData,
         reset,
+        setLoading,
         setCurrentUser,
         addThread,
         vote,
