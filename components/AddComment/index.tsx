@@ -9,7 +9,7 @@ import { AddCommentType, DataContextType } from "../../TypesAndInterfaces";
 const AddComment:AddCommentType = ({type, threadID, replyingTo, setShowAddComment}) => {
     
     const [comment, setComment] = useState('');    
-    const {addThread, addReply, data} = useContext(DataContext) as DataContextType;
+    const {addThread, addReply, state} = useContext(DataContext) as DataContextType;
     
     
     const sendHandle = () => {
@@ -36,11 +36,11 @@ const AddComment:AddCommentType = ({type, threadID, replyingTo, setShowAddCommen
                 onChange={(e) => setComment(e.target.value)}
             />
             {
-                data
+                state.loadingState === 'loaded'
                 ?
                 <div className={styles.avatar}>
                     <Image 
-                        src={data.currentUser.image.png.slice(1)}
+                        src={state.data.currentUser.image.png.slice(1)}
                         alt="avatar"
                         width="32"
                         height="32"
