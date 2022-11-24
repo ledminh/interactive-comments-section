@@ -11,8 +11,10 @@ import { DataContextType, FunctionButtonsType } from "../../TypesAndInterfaces";
 import styles from './Comment.module.scss';
 import { UIContext, uiControlType } from '../../useUIContext';
 
+import { useSession } from 'next-auth/react';
 
 const FunctionButtons:FunctionButtonsType = ({authorID, commentType, threadID, replyID, setShowAddComment, showAddComment, setShowTextArea}) => {
+    const { data: session } = useSession();  
 
     const {state, setCommentToDelete} = useContext(DataContext) as DataContextType;
     const {setShowDeleteModal} = useContext(UIContext) as uiControlType;
@@ -33,18 +35,18 @@ const FunctionButtons:FunctionButtonsType = ({authorID, commentType, threadID, r
         setShowTextArea(true);
     }
 
-    return (
-        <div className={styles.functions}>
-            {
-                state.loadingState === 'notLoad'? null:
-                state.data.currentUser.id === authorID ?
-                <>
-                    <FunctionButton type = 'DELETE' onClick={() => deleteHandle()}/>
-                    <FunctionButton type = 'EDIT' onClick={editHandle}/>
-                </>
-                : <FunctionButton type = 'REPLY' onClick={replyHandle}/>
-            }
-        </div>
+    return (            
+            <div className={styles.functions}>
+                {session === null? null :
+                    state.loadingState === 'notLoad'? null:
+                    state.data.currentUser.id === authorID ?
+                    <>
+                        <FunctionButton type = 'DELETE' onClick={() => deleteHandle()}/>
+                        <FunctionButton type = 'EDIT' onClick={editHandle}/>
+                    </>
+                    : <FunctionButton type = 'REPLY' onClick={replyHandle}/>
+                }
+            </div>
     );
 }
 
