@@ -11,7 +11,9 @@ import AddComment from "../components/AddComment";
 // import clientPromise from '../utils/mongodb';
 
 
-import { DataContextType, ThreadType } from "../TypesAndInterfaces";
+import { DataContextType } from "../TypesAndInterfaces";
+
+import { useSession } from "next-auth/react";
 
 import styles from '../styles/Home.module.scss';
 import { useContext, useEffect } from "react";
@@ -24,7 +26,8 @@ import AuthSection from "../components/AuthSection";
 const Home:NextPage = () =>{
 
   const {state, loadData} = useContext(DataContext) as DataContextType;
-  
+  const { data: session } = useSession()  
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => loadData(), []);
 
@@ -53,9 +56,12 @@ const Home:NextPage = () =>{
                         threadData={thread}/>
                     ))
           }
-          <AddComment 
-            type='THREAD' 
-            />
+          {
+            session? 
+            <AddComment 
+              type='THREAD' 
+              />: null
+          }
           <Modals/>
         </main>
       }
