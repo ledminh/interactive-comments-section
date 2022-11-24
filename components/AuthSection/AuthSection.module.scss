@@ -4,4 +4,44 @@
     border-radius: 10px;
 
     padding: 1rem;
+
+    text-align: center;
+
+    button {
+        background-color: #5357B6;
+        border-radius: 8px;
+        color: white;
+
+        border: none;
+        padding: .6rem;
+
+        &:hover {
+            background-color: #C5C6EF;
+        }
+    
+        &:active {
+            transition: transform .3s;
+            transform: scale(.95);
+        }
+    
+    }
+}
+
+.loginIntro {
+    margin-bottom: .6rem;
+}
+
+.avatar {
+    width: 70px;
+    height:70px;
+    margin: auto;
+    margin-bottom: .6rem;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.username {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: .6rem;
 }
