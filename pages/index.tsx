@@ -14,27 +14,20 @@ import AddComment from "../components/AddComment";
 import { DataContextType, ThreadType } from "../TypesAndInterfaces";
 
 import styles from '../styles/Home.module.scss';
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { DataContext } from "../useDataContext";
 import Modals from "../components/Modal";
 
 import LoadingScreen from '../components/LoadingScreen';
-
+import AuthSection from "../components/AuthSection";
 
 const Home:NextPage = () =>{
 
   const {state, loadData} = useContext(DataContext) as DataContextType;
-  // const [threads, setThreads] = useState<ThreadType[]|null>(null);
   
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => loadData(), []);
 
-  // useEffect(() => {
-  //   if(state.loadingState === 'loaded') {
-  //     setThreads(state.data.comments);
-  //   }
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [state.loadingState]);
   
   return (
     <>
@@ -47,6 +40,7 @@ const Home:NextPage = () =>{
       {
         state.loadingState === 'notLoad'? 'LOADING ....' :
         <main className={styles.main}>
+          <AuthSection />
           {
             state.loadingState === 'loading'?            
                 <LoadingScreen />
