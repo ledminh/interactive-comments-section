@@ -16,15 +16,17 @@ const useDataContext: () => DataContextType = () => {
     
     const { data: session } = useSession();  
 
-    
+    // init    
     useEffect(() => {
-        setLoading();
-        loadThreads();
+        initData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     
+
     useEffect(() => {
         if(session) {
+            setLoading();
+
             fetch('/api/get-user',
             {
                 method: "POST",
@@ -36,13 +38,16 @@ const useDataContext: () => DataContextType = () => {
             })
             .then(res => res.json())
             .then(({currentUser}) => {
-                setCurrentUser(currentUser);
+                dispatch({
+                    type: 'set-current-user',
+                    payload: {
+                        currentUser: currentUser
+                    }
+                })
             })
         }
     }, [session]);
-
-
-
+    /**************************************** */
 
     const loadThreads = () => {
         fetch('/api/get-threads')
@@ -53,10 +58,25 @@ const useDataContext: () => DataContextType = () => {
         })).catch(e => console.log(e));
     }
 
+    const initData = () => {
+        fetch('/api/get-threads')
+            .then(res => res.json())
+            .then(threads => {
+                dispatch({
+                    type: 'set-data',
+                    payload: {
+                        comments: threads,
+                        currentUser: null
+                    }
+                })
+
+            });
+            
+    }
+
     /*********************************************************/
 
     const addThread = (content:string) => {       
-        console.log(state);
         
         if(state.loadingState === 'notLoad' || state.data.currentUser === null) return; 
         
@@ -194,14 +214,11 @@ const useDataContext: () => DataContextType = () => {
     };
 
     
-    const setCurrentUser = (currentUser:UserInfo) => dispatch({type: 'set-current-user', payload: {currentUser: currentUser}})
 
     return {
         state,
-        loadThreads,
         reset,
         setLoading,
-        setCurrentUser,
         addThread,
         vote,
         setCommentToDelete,

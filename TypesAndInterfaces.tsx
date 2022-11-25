@@ -43,10 +43,8 @@ export type DataType = {
 
 export type DataContextType = {
     state: StateType,
-    loadThreads: () => void,
     reset: () => void,
     setLoading: () => void,
-    setCurrentUser: (currentUser:UserInfo) => void,
     addThread: (content:string) => void,
     vote: (voteType: 'UPVOTE' | 'DOWNVOTE', commentType: 'THREAD' | 'REPLY', id:string, parentID?:string) => void,
     setCommentToDelete: (commentToDelete:CommentToDeleteType) => void,
