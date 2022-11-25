@@ -1,6 +1,9 @@
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
+import clientPromise from "../../../utils/mongodb"
+
 if (!process.env.GITHUB_ID) {
     throw new Error('Invalid/Missing environment variable: "GITHUB_ID"')
 }
@@ -18,6 +21,7 @@ export const authOptions = {
             clientSecret: process.env.GITHUB_SECRET,    
         }),    // ...add more providers here  
     ],
+    adapter: MongoDBAdapter(clientPromise)
 
     
 }

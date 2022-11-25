@@ -7,9 +7,6 @@ import { GetServerSideProps } from "next";
 import Thread from "../components/Thread";
 import AddComment from "../components/AddComment";
 
-// import dataJSON from '../data.json';
-// import clientPromise from '../utils/mongodb';
-
 
 import { DataContextType } from "../TypesAndInterfaces";
 
@@ -25,11 +22,9 @@ import AuthSection from "../components/AuthSection";
 
 const Home:NextPage = () =>{
 
-  const {state, loadData} = useContext(DataContext) as DataContextType;
+  const {state} = useContext(DataContext) as DataContextType;
   const { data: session } = useSession()  
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => loadData(), []);
 
   
   return (
@@ -70,8 +65,3 @@ const Home:NextPage = () =>{
 }
 
 export default Home;
-
-
-
-
-

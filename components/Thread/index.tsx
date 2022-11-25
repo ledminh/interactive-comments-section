@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext } from "react";
+import { FunctionComponent, useContext, useEffect } from "react";
 import { DataContextType, ThreadType } from "../../TypesAndInterfaces";
 import { DataContext } from "../../useDataContext";
 import AddComment from "../AddComment";
@@ -22,8 +22,8 @@ const Thread:FunctionComponent<{threadData:ThreadType}> = ({threadData}) => {
                     createdAt={threadData.createdAt}
                     content={threadData.content}
                     score={threadData.upvotes.length - threadData.downvotes.length}
-                    upvote={threadData.upvotes.includes(state.data.currentUser.id)}
-                    downvote={threadData.downvotes.includes(state.data.currentUser.id)}
+                    upvote={state.data.currentUser === null? false : threadData.upvotes.includes(state.data.currentUser.id)}
+                    downvote={state.data.currentUser === null? false : threadData.downvotes.includes(state.data.currentUser.id)}
                 />
             </div>
             {
@@ -42,8 +42,8 @@ const Thread:FunctionComponent<{threadData:ThreadType}> = ({threadData}) => {
                                 createdAt={Rep.createdAt}
                                 content={Rep.content}
                                 score={Rep.upvotes.length - Rep.downvotes.length}
-                                upvote={Rep.upvotes.includes(state.data.currentUser.id)}
-                                downvote={Rep.downvotes.includes(state.data.currentUser.id)}
+                                upvote={state.data.currentUser === null? false :Rep.upvotes.includes(state.data.currentUser.id)}
+                                downvote={state.data.currentUser === null? false : Rep.downvotes.includes(state.data.currentUser.id)}
                                 replyingTo={Rep.replyingTo}
                             />
                         ))

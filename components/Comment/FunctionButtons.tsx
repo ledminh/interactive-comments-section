@@ -39,6 +39,7 @@ const FunctionButtons:FunctionButtonsType = ({authorID, commentType, threadID, r
             <div className={styles.functions}>
                 {session === null? null :
                     state.loadingState === 'notLoad'? null:
+                    state.data.currentUser === null? null :
                     state.data.currentUser.id === authorID ?
                     <>
                         <FunctionButton type = 'DELETE' onClick={() => deleteHandle()}/>

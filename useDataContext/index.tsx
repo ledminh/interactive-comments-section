@@ -1,198 +1,65 @@
-import { createContext, useReducer, useState} from "react";
+import { createContext, useEffect, useReducer, useState} from "react";
 
-import { DataContextType, StateType, ActionType, DataType, ReducerType, CommentToDeleteType, UserInfo } from "../TypesAndInterfaces";
+import { DataContextType, CommentToDeleteType, UserInfo } from "../TypesAndInterfaces";
 
+import reducer, {initState} from "./reducer";
+
+import { useSession } from "next-auth/react";
 
 
 export const DataContext = createContext<DataContextType|null>(null);
-
-
-const initState:StateType = {loadingState: 'notLoad'};
-
-
-const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
-
-    switch (action.type) {
-        case 'set-data':
-            return {
-                loadingState: 'loaded',
-                data: action.payload
-            };
-        
-        case 'set-current-user':
-            if(state.loadingState !== 'loading') return state;
-
-            return {
-                loadingState: 'loaded',
-                data: {
-                    ...state.data,
-                    currentUser: action.payload.currentUser
-                }
-            }
-        
-        case 'loading' :
-            if(state.loadingState === 'notLoad') return state;
-            
-            return {
-                ...state,
-                loadingState: 'loading',
-            }
-
-        case 'reset': 
-            return initState;
-
-        case 'set-content/thread':
-            if(state.loadingState !== 'loading') return state;
-
-            {
-                const newThreads = state.data.comments.slice();
-                const thread = newThreads.find(t => t.id === action.payload.id);
-
-                if(thread === undefined) return state;
-
-                thread.content = action.payload.content;
-
-                const newState:StateType = {
-                    loadingState: 'loaded',
-                    data: {
-                        ...state.data,
-                        comments: newThreads
-                    }
-                };
-
-                return newState;
-            }
-        
-        case 'set-content/reply':
-            if(state.loadingState !== 'loading') return state;
-
-            {
-                const newThreads = state.data.comments.slice();
-                const thread = newThreads.find(t => t.id === action.payload.parentID);
-
-                if(thread === undefined) return state;
-
-                const reply = thread.replies.find(r => r.id === action.payload.id);
-
-                if(reply === undefined) return state;
-
-
-                reply.content = action.payload.content;
-
-                const newState:StateType = {
-                    loadingState: 'loaded',
-                    data: {
-                        ...state.data,
-                        comments: newThreads
-                    }
-                };
-
-                return newState;
-            }     
-
-        case 'vote' :
-            if(state.loadingState !== 'loading') return state;
-            
-            {
-                const newThreads = state.data.comments.slice();
-
-                
-
-                if(action.payload.commentType === 'THREAD') {
-                    const thread = newThreads.find(t => t.id === action.payload.id);
-
-                    if(thread === undefined) return state;
-                    
-                    if(action.payload.voteType === 'UPVOTE') {
-                        if(!thread.upvotes.includes(state.data.currentUser.id)){
-                            thread.upvotes.push(state.data.currentUser.id);
-                            thread.downvotes = thread.downvotes.filter(id => id !== state.data.currentUser.id);
-                        }
-                    }
-                    else {
-                        if(!thread.downvotes.includes(state.data.currentUser.id)) {
-                            thread.downvotes.push(state.data.currentUser.id);
-                            thread.upvotes = thread.upvotes.filter(id => id !== state.data.currentUser.id);
-                        }
-                    }
-                }
-                else {
-                    const thread = newThreads.find(t => t.id === action.payload.parentID);
-
-                    if(thread === undefined) return state;
-
-                    const reply = thread.replies.find(rep => rep.id === action.payload.id);
-
-                    if(reply === undefined) return state;
-
-                    if(action.payload.voteType === 'UPVOTE') {
-                        if(!reply.upvotes.includes(state.data.currentUser.id)){
-                            reply.upvotes.push(state.data.currentUser.id);
-                            reply.downvotes = reply.downvotes.filter(id => id !== state.data.currentUser.id);
-                        }
-                    }
-                    else {
-                        if(!reply.downvotes.includes(state.data.currentUser.id)){
-                            reply.downvotes.push(state.data.currentUser.id);
-                            reply.upvotes = reply.downvotes.filter(id => id !== state.data.currentUser.id);
-                        }
-                    }
-                }
-
-                return {
-                    loadingState: 'loaded',
-                    data: {
-                        ...state.data,
-                        comments: newThreads
-                    }
-                };
-            }
-
-        default:
-            throw new Error();
-    }
-
-}
-
 
 const useDataContext: () => DataContextType = () => {
     const [state, dispatch] = useReducer(reducer, initState);
 
     const [commentToDelete, setCommentToDelete] = useState<CommentToDeleteType|null>(null);
     
+    const { data: session } = useSession();  
+
+    
+    useEffect(() => {
+        setLoading();
+        loadThreads();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    
+    useEffect(() => {
+        if(session) {
+            fetch('/api/get-user',
+            {
+                method: "POST",
+                body: JSON.stringify({
+                    username: session.user.name,
+                    email: session.user.email,
+                    image: session.user.image
+                })
+            })
+            .then(res => res.json())
+            .then(({currentUser}) => {
+                setCurrentUser(currentUser);
+            })
+        }
+    }, [session]);
+
+
+
+
+    const loadThreads = () => {
+        fetch('/api/get-threads')
+        .then(res => res.json())
+        .then(threads => dispatch({
+            type: 'set-threads',
+            payload: {threads: threads}
+        })).catch(e => console.log(e));
+    }
 
     /*********************************************************/
 
-    const loadData = () => {
-        fetch('/api/get-threads')
-        .then(res => res.json())
-        .then(threads => {
-            const data = {
-                comments: threads,
-                currentUser: {
-                    id: '636969580c2f2107e31bf931',
-                    "image": { 
-                    "png": "./images/avatars/image-juliusomo.png",
-                    "webp": "./images/avatars/image-juliusomo.webp"
-                    },
-                    "username": "juliusomo"
-                }
-            }
-
-            dispatch({
-                type: 'set-data',
-                payload: data
-            });
-        })
-        .catch(e => console.log(e));
-
-    }
-
-
-    const addThread = (content:string) => {
-        if(state.loadingState === 'notLoad') return; 
+    const addThread = (content:string) => {       
+        console.log(state);
         
-
+        if(state.loadingState === 'notLoad' || state.data.currentUser === null) return; 
+        
 
         const threadToDatabase = {
             content: content, 
@@ -207,11 +74,11 @@ const useDataContext: () => DataContextType = () => {
             method: "POST",
             body: JSON.stringify(threadToDatabase)
         })
-        .then(() => loadData());
+        .then(() => loadThreads());
     }
     
     function addReply (threadID:string, replyingTo:string, content:string) {
-        if(state.loadingState === 'notLoad') return; 
+        if(state.loadingState === 'notLoad' || state.data.currentUser === null) return; 
 
         const replyToDatabase = {
             content: content, 
@@ -227,13 +94,13 @@ const useDataContext: () => DataContextType = () => {
             method: "POST",
             body: JSON.stringify(replyToDatabase)
         })
-        .then(() => loadData());
+        .then(() => loadThreads());
         
 
     }
 
     function vote(voteType: 'UPVOTE' | 'DOWNVOTE', commentType: 'THREAD' | 'REPLY', id:string, parentID?:string) {
-        if(state.loadingState === 'notLoad') return; 
+        if(state.loadingState === 'notLoad' || state.data.currentUser === null) return; 
 
         setLoading();
 
@@ -276,7 +143,7 @@ const useDataContext: () => DataContextType = () => {
                     threadID: commentToDelete.threadID
                 })
             })
-            .then(()  => loadData())         
+            .then(()  => loadThreads())         
         }
         else {
             fetch("/api/delete-reply",
@@ -287,7 +154,7 @@ const useDataContext: () => DataContextType = () => {
                     replyID:commentToDelete.replyID as string
                 })
             })
-            .then(()  => loadData())
+            .then(()  => loadThreads())
         }
     } 
 
@@ -331,7 +198,7 @@ const useDataContext: () => DataContextType = () => {
 
     return {
         state,
-        loadData,
+        loadThreads,
         reset,
         setLoading,
         setCurrentUser,

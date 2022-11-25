@@ -6,7 +6,9 @@ import { UserInfo } from '../../TypesAndInterfaces';
 import clientPromise from '../../utils/mongodb';
 
 type ReqData = {
-    username: string
+    username: string,
+    email: string,
+    image: string
 }
 
 type ResData = {
@@ -31,7 +33,11 @@ export default async function handler(
     const client = await clientPromise;
     const users = client.db("interactive-comment-section").collection('users');
     
-    const user = await users.findOne({username: data.username});
+    const user = await users.findOne({
+        name: data.username,
+        email: data.email,
+        image: data.image
+    });
 
     if(user === null)
         res.status(404).json({message: "User not found!"});
@@ -39,10 +45,10 @@ export default async function handler(
         const currentUser = {
             id: user._id.toString(),
             image: {
-                png: user.image.png,
-                webp: user.image.webp
+                png: user.image,
+                webp: ''
             },
-            username: user.username
+            username: user.name
         }
 
         res.status(200).json({

@@ -45,7 +45,7 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                         authorName={authorName}
                     />
                     <AuthorName authorName={authorName}/>
-                    <You show={state.loadingState !== 'loaded'? false : state.data.currentUser.id === authorID} />
+                    <You show={state.loadingState !== 'loaded' || state.data.currentUser === null ? false : state.data.currentUser.id === authorID} />
                     <CreatedAt createdAt={createdAt} />
                 </div>
                 
@@ -110,7 +110,7 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                             authorName={authorName}
                         />
                         <AuthorName authorName={authorName}/>
-                        <You show={state.loadingState !== 'loaded'? false : state.data.currentUser.id === authorID} />
+                        <You show={state.loadingState !== 'loaded' || state.data.currentUser === null? false : state.data.currentUser.id === authorID} />
                         <CreatedAt createdAt={createdAt} />
                         <FunctionButtons 
                             authorID={authorID}

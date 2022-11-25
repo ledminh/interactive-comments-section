@@ -33,8 +33,8 @@ export interface ThreadType extends CommentType {
 
 
 export type DataType = {
-    comments: ThreadType[],
-    currentUser: UserInfo
+    comments: ThreadType[] | [],
+    currentUser: UserInfo | null
 }
 
 /******************
@@ -43,7 +43,7 @@ export type DataType = {
 
 export type DataContextType = {
     state: StateType,
-    loadData: () => void,
+    loadThreads: () => void,
     reset: () => void,
     setLoading: () => void,
     setCurrentUser: (currentUser:UserInfo) => void,
@@ -85,6 +85,7 @@ export type StateType = {loadingState: 'notLoad'}
 }
 
 export type ActionType = {type:'set-data', payload: DataType}
+| {type: 'set-threads', payload: {threads: ThreadType[]}}
 | {type: 'reset'}
 | {type: 'loading'}
 | {type: 'set-current-user', payload: {currentUser:UserInfo}}

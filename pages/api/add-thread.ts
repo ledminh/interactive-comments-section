@@ -20,6 +20,7 @@ export default async function handler(
     res: NextApiResponse<ResData>
 ) {
 
+
     if (req.method !== 'POST') {
         res.status(405).send({ message: 'Only POST requests allowed' })
         return
@@ -30,7 +31,6 @@ export default async function handler(
     const client = await clientPromise;
     const collection = client.db("interactive-comment-section").collection('comments');
     
-
     
     const doc = await collection.insertOne({
         type: 'THREAD',

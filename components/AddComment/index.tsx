@@ -14,7 +14,6 @@ const AddComment:AddCommentType = ({type, threadID, replyingTo, setShowAddCommen
     
     const sendHandle = () => {
         if(comment === '') return;
-        
         addThread(comment);
         setComment("");
     }
@@ -27,6 +26,8 @@ const AddComment:AddCommentType = ({type, threadID, replyingTo, setShowAddCommen
 
     }
 
+
+
     return (
         <div className={styles.AddComment}>
             <textarea 
@@ -36,11 +37,11 @@ const AddComment:AddCommentType = ({type, threadID, replyingTo, setShowAddCommen
                 onChange={(e) => setComment(e.target.value)}
             />
             {
-                state.loadingState === 'loaded'
+                state.loadingState === 'loaded' && state.data.currentUser !== null
                 ?
                 <div className={styles.avatar}>
                     <Image 
-                        src={state.data.currentUser.image.png.slice(1)}
+                        src={state.data.currentUser.image.png}
                         alt="avatar"
                         width="32"
                         height="32"
