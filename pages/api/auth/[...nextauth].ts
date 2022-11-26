@@ -1,8 +1,9 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions, Session } from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
 import clientPromise from "../../../utils/mongodb"
+
 
 if (!process.env.GITHUB_ID) {
     throw new Error('Invalid/Missing environment variable: "GITHUB_ID"')
@@ -13,7 +14,13 @@ if (!process.env.GITHUB_SECRET) {
 }
 
 
-export const authOptions = {  
+export type SessionType = Session & {
+    user: {
+        id: string
+    }
+}
+
+export const authOptions:NextAuthOptions = {  
     // Configure one or more authentication providers  
     providers: [    
         GithubProvider({      
@@ -21,9 +28,24 @@ export const authOptions = {
             clientSecret: process.env.GITHUB_SECRET,    
         }),    // ...add more providers here  
     ],
-    adapter: MongoDBAdapter(clientPromise)
+    adapter: MongoDBAdapter(clientPromise),
 
-    
+
+    callbacks: {
+        async session({ session, token, user }):Promise<SessionType> {
+            
+
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    id: user.id
+                }
+            } 
+        }
+    }
+
+
 }
 
 export default NextAuth(authOptions)

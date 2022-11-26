@@ -6,6 +6,7 @@ import reducer, {initState} from "./reducer";
 
 import { useSession } from "next-auth/react";
 
+import { SessionType } from "../pages/api/auth/[...nextauth]";
 
 export const DataContext = createContext<DataContextType|null>(null);
 
@@ -24,28 +25,28 @@ const useDataContext: () => DataContextType = () => {
     
 
     useEffect(() => {
-        if(session) {
+        if(session && state.loadingState === 'loaded' && (session as SessionType).user.id !== state.data.currentUser?.id) {
+
             setLoading();
 
-            fetch('/api/get-user',
-            {
-                method: "POST",
-                body: JSON.stringify({
-                    username: session.user.name,
-                    email: session.user.email,
-                    image: session.user.image
-                })
-            })
-            .then(res => res.json())
-            .then(({currentUser}) => {
-                dispatch({
-                    type: 'set-current-user',
-                    payload: {
-                        currentUser: currentUser
-                    }
-                })
-            })
+            const currentUser = {
+                id: (session as SessionType).user.id,
+                image: {
+                    png: session.user.image,
+                    webp: ''
+                },
+                username: session.user.name
+            };
+            
+            dispatch({
+                type: 'set-current-user',
+                payload: {
+                    currentUser: currentUser
+                }
+            });
+
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
     /**************************************** */
 
@@ -69,9 +70,7 @@ const useDataContext: () => DataContextType = () => {
                         currentUser: null
                     }
                 })
-
             });
-            
     }
 
     /*********************************************************/

@@ -4,6 +4,8 @@ import Image from "next/image";
 
 import styles from './AuthSection.module.scss';
 
+import { UserInfo } from "../../TypesAndInterfaces";
+
 export default function AuthSection() {  
     const { data: session } = useSession()  
     
@@ -25,7 +27,9 @@ export default function AuthSection() {
         </> 
     ): (
         <>      
-            <div className={styles.loginIntro}>If you have Github account, log in to add comment.</div>      
+            <div className={styles.loginIntro}>
+                If you have Github account, log in to add comment.
+            </div>      
             <button onClick={() => signIn()}>Log in</button>    
         </>
     )
