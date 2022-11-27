@@ -30,7 +30,7 @@ export default function AuthSection() {
             <div className={styles.loginIntro}>
                 If you have Github account, log in to add comment.
             </div>      
-            <button onClick={() => signIn()}>Log in</button>    
+            <button onClick={() => signIn('github')}>Log in</button>    
         </>
     )
 
