@@ -12,30 +12,25 @@ import { useSession } from "next-auth/react";
 type ScoreType = FunctionComponent<{type:'THREAD'|'REPLY', id:string, parentID?:string, score:number, upvote: boolean, downvote: boolean}>  
 
 const Score:ScoreType = ({type, id, parentID, score, upvote, downvote}) => {
-    const {vote} = useContext(DataContext) as DataContextType;
-
-    const {data: session} = useSession();
-
+    const {vote, state} = useContext(DataContext) as DataContextType;
 
     return (
         <div className={styles.score}>
             <Button type="UPVOTE"
-                highlight={session? upvote: false}
+                highlight={state.loadingState !== 'notLoad' && state.data.currentUser !== null? upvote: false}
                 onClick={() => {
-                    if(!session) return;
-
-                    if(!upvote) 
+                    if(state.loadingState !== 'notLoad' && state.data.currentUser !== null && !upvote) {
                         vote('UPVOTE', type, id, parentID);
+                    }                        
                 }}
             />
             <span>{score}</span>
             <Button type="DOWNVOTE"
-                highlight={session? downvote: false}
+                highlight={state.loadingState !== 'notLoad' && state.data.currentUser !== null? downvote: false}
                 onClick={() => {
-                    if(!session) return;
-                    
-                    if(!downvote)                    
+                    if(state.loadingState !== 'notLoad' && state.data.currentUser !== null && !downvote) {
                         vote('DOWNVOTE', type, id, parentID);
+                    }    
                 }}
             />
         </div>
