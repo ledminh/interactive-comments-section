@@ -13,7 +13,7 @@ import { DataContextType } from "../TypesAndInterfaces";
 import { useSession } from "next-auth/react";
 
 import styles from '../styles/Home.module.scss';
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { DataContext } from "../useDataContext";
 import Modals from "../components/Modal";
 
@@ -23,9 +23,6 @@ import AuthSection from "../components/AuthSection";
 const Home:NextPage = () =>{
 
   const {state} = useContext(DataContext) as DataContextType;
-  const { data: session } = useSession()  
-
-
   
   return (
     <>
@@ -36,14 +33,12 @@ const Home:NextPage = () =>{
         <title>Frontend Mentor | Interactive comments section</title>
       </Head>
       {
-        state.loadingState === 'notLoad'? 'LOADING ....' :
+        state.loadingState === 'notLoad'? <LoadingScreen />:
         <main className={styles.main}>
+          { state.loadingState === 'loading' && <LoadingScreen />}
+
           <AuthSection />
-          {
-            state.loadingState === 'loading'?            
-                <LoadingScreen />
-              :null
-          }
+          
           {
             state.data.comments.map((thread) => (
                       <Thread 
@@ -51,12 +46,9 @@ const Home:NextPage = () =>{
                         threadData={thread}/>
                     ))
           }
-          {
-            session? 
-            <AddComment 
-              type='THREAD' 
-              />: null
-          }
+          
+          { state.data.currentUser && <AddComment type='THREAD' /> }
+          
           <Modals/>
         </main>
       }

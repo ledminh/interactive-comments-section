@@ -43,7 +43,6 @@ export type DataType = {
 
 export type DataContextType = {
     state: StateType,
-    reset: () => void,
     setLoading: () => void,
     addThread: (content:string) => void,
     vote: (voteType: 'UPVOTE' | 'DOWNVOTE', commentType: 'THREAD' | 'REPLY', id:string, parentID?:string) => void,
@@ -84,9 +83,8 @@ export type StateType = {loadingState: 'notLoad'}
 
 export type ActionType = {type:'set-data', payload: DataType}
 | {type: 'set-threads', payload: {threads: ThreadType[]}}
-| {type: 'reset'}
 | {type: 'loading'}
-| {type: 'set-current-user', payload: {currentUser:UserInfo}}
+| {type: 'set-current-user', payload: {currentUser:UserInfo|null}}
 | {type: 'set-content/thread', payload: {id: string, content: string}}
 | {type: 'set-content/reply', payload: {id:string, content:string, parentID:string}}
 | {type: 'vote', payload: {voteType: 'UPVOTE' | 'DOWNVOTE', commentType: 'THREAD' | 'REPLY', id:string, parentID?:string }};

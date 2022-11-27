@@ -4,50 +4,27 @@ import { DataContextType, CommentToDeleteType, UserInfo } from "../TypesAndInter
 
 import reducer, {initState} from "./reducer";
 
-import { useSession } from "next-auth/react";
-
 import { SessionType } from "../pages/api/auth/[...nextauth]";
 
 export const DataContext = createContext<DataContextType|null>(null);
 
-const useDataContext: () => DataContextType = () => {
+const useDataContext: (session:SessionType|null) => DataContextType = (session) => {
     const [state, dispatch] = useReducer(reducer, initState);
 
     const [commentToDelete, setCommentToDelete] = useState<CommentToDeleteType|null>(null);
     
-    const { data: session } = useSession();  
-
+    
     // init    
     useEffect(() => {
-        initData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    
-
-    useEffect(() => {
-        if(session && state.loadingState === 'loaded' && (session as SessionType).user.id !== state.data.currentUser?.id) {
-
-            setLoading();
-
-            const currentUser = {
-                id: (session as SessionType).user.id,
-                image: {
-                    png: session.user.image,
-                    webp: ''
-                },
-                username: session.user.name
-            };
-            
-            dispatch({
-                type: 'set-current-user',
-                payload: {
-                    currentUser: currentUser
-                }
-            });
+        if(state.loadingState === 'notLoad' || (state.loadingState === 'loaded' && (state.data.currentUser === null || state.data.currentUser.id !== (session as SessionType).user.id))) {
+            initData();
 
         }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
+
+    
     /**************************************** */
 
     const loadThreads = () => {
@@ -63,14 +40,39 @@ const useDataContext: () => DataContextType = () => {
         fetch('/api/get-threads')
             .then(res => res.json())
             .then(threads => {
+                const currentUser = getCurrentUser();
+
+                
                 dispatch({
                     type: 'set-data',
                     payload: {
                         comments: threads,
-                        currentUser: null
+                        currentUser: currentUser
                     }
                 })
             });
+    }
+
+    
+
+    const getCurrentUser = () => {
+
+        if(!session) {    
+            return null;
+        }
+        else  {
+
+            return {
+                id: (session as SessionType).user.id,
+                image: {
+                    png: session.user.image,
+                    webp: ''
+                },
+                username: session.user.name
+            };
+            
+        }
+
     }
 
     /*********************************************************/
@@ -206,7 +208,6 @@ const useDataContext: () => DataContextType = () => {
         });
     }
 
-    const reset = () => dispatch({type: 'reset'});
     const setLoading = () => {
         dispatch({type: 'loading'})
         
@@ -216,7 +217,6 @@ const useDataContext: () => DataContextType = () => {
 
     return {
         state,
-        reset,
         setLoading,
         addThread,
         vote,

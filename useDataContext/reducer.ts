@@ -6,9 +6,6 @@ export const initState:StateType = {loadingState: 'notLoad'};
 const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
 
     switch (action.type) {
-        case 'reset': 
-            return initState;
-
         case 'set-data':
             return {
                 loadingState: 'loaded',
@@ -17,7 +14,8 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
         
         case 'set-threads': 
             if(state.loadingState !== 'loading') return state;
-
+            
+            
             return {
                 loadingState: 'loaded',
                 data: {
@@ -29,6 +27,7 @@ const reducer:ReducerType = (state:StateType, action:ActionType) =>  {
         case 'set-current-user':
             if(state.loadingState !== 'loading') return state;
             
+
             return {
                 loadingState: 'loaded',
                 data: {
