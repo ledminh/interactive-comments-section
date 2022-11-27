@@ -23,6 +23,16 @@
     margin-bottom: 1rem;
 }
 
+.avatar {
+    display: flex;
+    align-items: center;
+
+    border-radius: 50%;
+    overflow: hidden;
+    width: 32px;
+    height: 32px;
+}
+
 .authorName {
     color: #334253;
     font-weight: 500;
