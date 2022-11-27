@@ -7,7 +7,6 @@ import { DataContextType } from "../../TypesAndInterfaces";
 
 import IconPlus from '../../assets/images/icon-plus.svg';
 import IconMinus from '../../assets/images/icon-minus.svg';
-import { useSession } from "next-auth/react";
 
 type ScoreType = FunctionComponent<{type:'THREAD'|'REPLY', id:string, parentID?:string, score:number, upvote: boolean, downvote: boolean}>  
 
