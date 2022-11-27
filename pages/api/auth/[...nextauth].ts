@@ -29,6 +29,7 @@ export const authOptions:NextAuthOptions = {
         }),    // ...add more providers here  
     ],
     adapter: MongoDBAdapter(clientPromise),
+    secret: process.env.SECRET,
 
 
     callbacks: {
