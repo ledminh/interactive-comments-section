@@ -51,7 +51,7 @@ const Button:PlusMinusButtonType = ({type, highlight, ...props}) => {
             {...props}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
-            ariel-label={type === 'UPVOTE'? 'down' : 'up'}
+            ariel-label={type === 'UPVOTE'? 'down vote' : 'up vote'}
             >
             {
                 type === 'UPVOTE'? 
