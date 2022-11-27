@@ -59,7 +59,10 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                             onChange={(e) => setTextAreaValue(e.target.value)}
                         />
                         <div className={styles.updateButtonWrapper}>
-                            <button onClick={updateButtonOnClick}>
+                            <button 
+                                onClick={updateButtonOnClick}
+                                ariel-label='update'
+                                >
                                 UPDATE
                             </button>
                         </div>
@@ -133,7 +136,10 @@ const Comment:CommentComponent = ({type, id, parentID, avatarURL, authorName, au
                                 onChange={(e) => setTextAreaValue(e.target.value)}
                             />
                             <div className={styles.updateButtonWrapper}>
-                                <button onClick={updateButtonOnClick}>
+                                <button 
+                                    onClick={updateButtonOnClick}
+                                    ariel-label='update'
+                                    >
                                     UPDATE
                                 </button>
                             </div>

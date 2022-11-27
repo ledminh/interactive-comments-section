@@ -51,7 +51,8 @@ const AddComment:AddCommentType = ({type, threadID, replyingTo, setShowAddCommen
             }
 
             <button className={styles.button}
-                onClick={type === 'THREAD'? sendHandle: replyHandle}>           
+                onClick={type === 'THREAD'? sendHandle: replyHandle}
+                ariel-label={type === 'THREAD'? 'SEND BUTTON': 'REPLY BUTTON'}>           
                 {type === 'REPLY'? 'REPLY' : 'SEND'}
             </button>
         </div>

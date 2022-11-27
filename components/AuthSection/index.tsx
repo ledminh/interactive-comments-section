@@ -4,7 +4,6 @@ import Image from "next/image";
 
 import styles from './AuthSection.module.scss';
 
-import { UserInfo } from "../../TypesAndInterfaces";
 
 export default function AuthSection() {  
     const { data: session } = useSession()  
@@ -23,14 +22,22 @@ export default function AuthSection() {
                 </div>
                 <div className={styles.username}>{session.user.name}</div>
             </div>        
-            <button onClick={() => signOut()}>Sign out</button>      
+            <button 
+                onClick={() => signOut()}
+                ariel-label='sign out'
+                >Sign out</button>      
         </> 
     ): (
         <>      
             <div className={styles.loginIntro}>
                 If you have Github account, log in to add comment.
             </div>      
-            <button onClick={() => signIn('github')}>Log in</button>    
+            <button 
+                onClick={() => signIn('github')}
+                ariel-label='log in'
+                >
+                    Log in
+                </button>    
         </>
     )
 

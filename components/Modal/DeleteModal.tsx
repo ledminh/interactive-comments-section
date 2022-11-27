@@ -32,10 +32,12 @@ const DeleteModal:FunctionComponent = () => {
             <div className={styles.content}>Are you sure you want to delete this comment? This will remove the comment and can&apos;t be undone.</div>
             <div className={styles.buttons}>
                 <button className={styles.noButton}
+                    ariel-label='no'
                     onClick={noHandle}>
                     NO, CANCEL
                 </button>
-                <button className={styles.yesButton} 
+                <button className={styles.yesButton}
+                    ariel-label='yes' 
                     onClick={yesHandle}>
                     YES, DELETE
                 </button>
