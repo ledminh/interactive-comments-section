@@ -44,10 +44,7 @@ export default async function handler(
     else {
         const currentUser = {
             id: user._id.toString(),
-            image: {
-                png: user.image,
-                webp: ''
-            },
+            image: user.image,
             username: user.name
         }
 

@@ -6,11 +6,8 @@ import { FunctionComponent, Dispatch, SetStateAction, Reducer } from "react";
  */
 export type UserInfo = {
     id: string,
-    'image': { 
-        png: string,
-        webp: string
-    },
-    'username': string
+    image: string,
+    username: string
 };
 
 export type CommentType = {

@@ -64,10 +64,7 @@ const useDataContext: (session:SessionType|null) => DataContextType = (session) 
 
             return {
                 id: (session as SessionType).user.id,
-                image: {
-                    png: session.user.image,
-                    webp: ''
-                },
+                image: session.user.image,
                 username: session.user.name
             };
             

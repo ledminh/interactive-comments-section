@@ -170,7 +170,7 @@ const Avatar:FunctionComponent<{avatarURL:string, authorName:string}> = ({avatar
     return (
         <div className={styles.avatar}>
             <Image 
-                src={avatarURL.slice(1)}
+                src={avatarURL}
                 alt={authorName + "'s avatar"}
                 width="32"
                 height="32"

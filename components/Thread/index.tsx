@@ -16,7 +16,7 @@ const Thread:FunctionComponent<{threadData:ThreadType}> = ({threadData}) => {
                 <Comment 
                     type='THREAD'
                     id={threadData.id}
-                    avatarURL={threadData.user.image.png}
+                    avatarURL={threadData.user.image}
                     authorName={threadData.user.username}
                     authorID={threadData.user.id}
                     createdAt={threadData.createdAt}
@@ -36,7 +36,7 @@ const Thread:FunctionComponent<{threadData:ThreadType}> = ({threadData}) => {
                                 type='REPLY'
                                 id={Rep.id}
                                 parentID={threadData.id}
-                                avatarURL={Rep.user.image.png}
+                                avatarURL={Rep.user.image}
                                 authorName={Rep.user.username}
                                 authorID={Rep.user.id}
                                 createdAt={Rep.createdAt}

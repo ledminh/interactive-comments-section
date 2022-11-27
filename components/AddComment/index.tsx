@@ -41,7 +41,7 @@ const AddComment:AddCommentType = ({type, threadID, replyingTo, setShowAddCommen
                 ?
                 <div className={styles.avatar}>
                     <Image 
-                        src={state.data.currentUser.image.png}
+                        src={state.data.currentUser.image}
                         alt="avatar"
                         width="32"
                         height="32"

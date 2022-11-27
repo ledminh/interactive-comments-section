@@ -51,10 +51,7 @@ const loadData = async () => {
     const usersObj:{[key:string]: UserInfo} = {};
     users.forEach(u => usersObj[u._id.toString()] = {
         id: u._id.toString(),
-        image: {
-            png: u.image.png,
-            webp: u.image.webp
-        },
+        image: u.image,
         username: u.username
     });
     
